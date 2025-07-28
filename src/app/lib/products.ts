@@ -33,8 +33,13 @@ export function getProductById(id: string): Product | null {
   return allProducts.find((product) => product.id === id) || null;
 }
 
-export function getProductsByCategory(category: keyof Database): Product[] {
+export function getProductsByCategory(
+  category: keyof Database | "all"
+): Product[] {
   const db = database as Database;
+  if (category === "all") {
+    return [...db.cartriges, ...db.pods, ...db.chaser, ...db.octobar, ...db.fl];
+  }
   return db[category] || [];
 }
 

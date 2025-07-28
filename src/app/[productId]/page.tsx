@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { getProductById, Product } from "../lib/products";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getProductById, Product } from "../lib/products";
+import Link from "next/link";
 
 export default function ProductPage() {
   const pathname = usePathname();
@@ -63,19 +64,22 @@ export default function ProductPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        <Link href="/" className="text-blue-600">
+          &larr; Back to home
+        </Link>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Product Details</h2>
-
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">
               <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
                 <Image
                   src={`/${product.image}`}
                   alt={product.name}
+                  className="object-contain"
                   fill
-                  className="object-cover"
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL={product.image}
                 />
               </div>
             </div>
@@ -90,32 +94,19 @@ export default function ProductPage() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center">
-                  <span className="text-gray-600 w-20">Stock:</span>
+                  <span className="text-gray-600 w-25">В наличии:</span>
                   <span
                     className={`font-medium ${
                       product.stock > 0 ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {product.stock > 0
-                      ? `${product.stock} available`
-                      : "Out of stock"}
-                  </span>
-                </div>
-
-                <div className="flex items-center">
-                  <span className="text-gray-600 w-20">Status:</span>
-                  <span
-                    className={`font-medium ${
-                      product.available ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {product.available ? "Available" : "Unavailable"}
+                    {product.stock > 0 ? `${product.stock}` : "Нет в наличии"}
                   </span>
                 </div>
               </div>
 
               <div className="prose max-w-none">
-                <h4 className="text-lg font-semibold mb-2">Description</h4>
+                <h4 className="text-lg font-semibold mb-2">Описание:</h4>
                 <p className="text-gray-700 whitespace-pre-line">
                   {product.description}
                 </p>
@@ -124,7 +115,7 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Add your checkout form here */}
+        {/* Add your checkout form here
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           <div className="space-y-3">
@@ -143,7 +134,7 @@ export default function ProductPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
