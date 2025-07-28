@@ -24,7 +24,7 @@ export default function ProductListWithCategories() {
   };
 
   return (
-    <div className="pb-32">
+    <div className="pb-15">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {currentProducts.length > 0 ? (
           currentProducts.map((product: Product) => (

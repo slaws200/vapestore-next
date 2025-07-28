@@ -76,7 +76,7 @@ export default function CategoryTabs({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}
+      className={`fixed bottom-10 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}
     >
       {/* Category Tabs */}
       <div className="relative">

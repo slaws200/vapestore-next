@@ -207,7 +207,7 @@ export default function SearchInput({
 
   return (
     <div className={`relative ${className}`}>
-      <div className="relative">
+      <div className="fixed top-10 left-0 right-0 z-50 shadow-lg">
         <input
           name="search"
           ref={inputRef}
