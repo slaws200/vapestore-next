@@ -89,7 +89,7 @@ export default function SearchInput({
         });
 
         setResults(sortedResults.slice(0, 10)); // Limit to 10 results
-        setIsOpen(sortedResults.length > 0);
+        setIsOpen(true);
         onSearch?.(sortedResults);
       } catch (error) {
         console.error("Search error:", error);
@@ -182,7 +182,7 @@ export default function SearchInput({
 
   // Handle input focus
   const handleInputFocus = () => {
-    if (results.length > 0) {
+    if (query !== "") {
       setIsOpen(true);
     }
   };
@@ -274,15 +274,15 @@ export default function SearchInput({
       {isOpen && (
         <div
           ref={resultsRef}
-          className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto"
+          className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto mt-6"
         >
           {results.length > 0 ? (
-            <div className="py-2">
+            <div>
               {results.map((product, index) => (
                 <Link
                   key={product.id}
                   href={`/${product.id}`}
-                  className={`block px-4 py-3 hover:bg-gray-50 transition-colors ${
+                  className={`block px-4 py-2 hover:bg-gray-50 transition-colors ${
                     index === selectedIndex
                       ? "bg-blue-50 border-l-4 border-blue-500"
                       : ""
@@ -338,9 +338,9 @@ export default function SearchInput({
                   d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"
                 />
               </svg>
-              <p className="text-sm">No products found</p>
+              <p className="text-sm">Товар не найден</p>
               <p className="text-xs text-gray-400 mt-1">
-                Try different keywords
+                Попробуйте ввести другой запрос
               </p>
             </div>
           )}

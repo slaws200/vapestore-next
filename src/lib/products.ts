@@ -1,4 +1,4 @@
-import database from "../../../public/data/database.json";
+import database from "../../public/data/database.json";
 
 export interface Product {
   id: string;

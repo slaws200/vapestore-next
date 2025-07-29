@@ -24,7 +24,7 @@ export default function ProductListWithCategories() {
   };
 
   return (
-    <div className="pb-15">
+    <div className="pt-6 pb-12">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {currentProducts.length > 0 ? (
           currentProducts.map((product: Product) => (
@@ -76,7 +76,6 @@ export default function ProductListWithCategories() {
         )}
       </div>
 
-      {/* Fixed Category Tabs at Bottom */}
       <CategoryTabs
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
