@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getProductsByCategory, Database } from "../lib/products";
 import { Product } from "../types/product";
 
@@ -33,6 +33,7 @@ export default function CategoryTabs({
   const [internalActiveCategory, setInternalActiveCategory] =
     useState<ExtendedCategory>("all");
   const [categories, setCategories] = useState<ExtendedCategory[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Use external active category if provided, otherwise use internal state
   const activeCategory = externalActiveCategory || internalActiveCategory;
@@ -66,6 +67,13 @@ export default function CategoryTabs({
     }
   };
 
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft += e.deltaY;
+    }
+  };
+
   if (categories.length === 0) {
     return (
       <div className={`flex justify-center items-center py-4 ${className}`}>
@@ -80,7 +88,11 @@ export default function CategoryTabs({
     >
       {/* Category Tabs */}
       <div className="relative">
-        <div className="overflow-x-auto scrollbar-hide">
+        <div
+          ref={scrollContainerRef}
+          className="overflow-x-auto scrollbar-hide"
+          onWheel={handleWheel}
+        >
           <div className="flex space-x-2 p-4 min-w-max">
             {categories.map((category) => {
               const isActive = activeCategory === category;

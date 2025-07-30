@@ -1,5 +1,5 @@
 import SearchInput from "@/components/SearchInput";
-import ProductListWithCategories from "@/components/ProductListWithCategories";
+import ProductListWithCategories from "@/components/productComponents/ProductListWithCategories";
 
 export default function Home() {
   return (
