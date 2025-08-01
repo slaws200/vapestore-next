@@ -249,7 +249,10 @@ export default function SearchInput({
               setQuery("");
               setResults([]);
               setIsOpen(false);
-              inputRef.current?.focus();
+              // Blur the input to close mobile keyboard
+              inputRef.current?.blur();
+              // Focus on body to ensure keyboard closes on mobile
+              document.body.focus();
             }}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
@@ -274,7 +277,7 @@ export default function SearchInput({
       {isOpen && (
         <div
           ref={resultsRef}
-          className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto mt-6"
+          className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto mt-12"
         >
           {results.length > 0 ? (
             <div>

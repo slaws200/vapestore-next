@@ -35,12 +35,12 @@ export default function ProductListWithCategories() {
 
   return (
     <div className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {currentProducts.map((product: Product) => (
           <Link
             key={product.id}
             href={`/${product.id}`}
-            className="bg-white rounded-lg shadow-md p-4 flex flex-col hover:shadow-lg transition"
+            className="bg-white rounded-lg shadow-md p-2 flex flex-col hover:shadow-lg transition"
           >
             <ProductCard product={product} />
           </Link>
