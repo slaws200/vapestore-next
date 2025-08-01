@@ -14,8 +14,8 @@ export default function ProductDetailCard({ product }: { product: Product }) {
 
     const reqBody = {
       ...product,
-      id: 7777,
-      username: "@battlegear",
+      id: 777,
+      username: "battlegear",
     };
 
     try {
@@ -98,7 +98,7 @@ export default function ProductDetailCard({ product }: { product: Product }) {
               </div>
               <button
                 onClick={orderHandler}
-                className="bg-sky-400 text-white px-4 py-2 rounded-md"
+                className="fixed bottom-4 left-0 right-0 z-50 bg-sky-400 text-white px-4 py-2 rounded-md"
               >
                 Заказать
               </button>

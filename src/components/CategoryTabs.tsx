@@ -68,7 +68,6 @@ export default function CategoryTabs({
   };
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft += e.deltaY;
     }

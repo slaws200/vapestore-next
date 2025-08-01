@@ -5,7 +5,7 @@ import React from "react";
 export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="h-full flex flex-col justify-between">
-      <div className="relative aspect-square bg-gray-100 rounded-md mb-2">
+      <div className="relative aspect-square bg-gray-100 rounded-md mb-1">
         <Image
           src={`/${product.image}`}
           alt={product.name}
