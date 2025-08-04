@@ -13,7 +13,7 @@ interface CategoryTabsProps {
 }
 
 // Category display names mapping
-const categoryDisplayNames: any = {
+const categoryDisplayNames = {
   all: "Все товары",
   cartriges: "Картриджи",
   pods: "Под-системы",
@@ -119,7 +119,9 @@ export default function CategoryTabs({
                     }
                   `}
                 >
-                  {categoryDisplayNames[category.name]}
+                  {categoryDisplayNames[
+                    category.name as keyof typeof categoryDisplayNames
+                  ] || category.name}
                   {/* {hasProducts && (
                     <span
                       className={`

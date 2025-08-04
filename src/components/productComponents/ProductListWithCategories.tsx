@@ -1,45 +1,82 @@
 "use client";
 
-// import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
+import { debounce } from "@/utils/debounce/debounce";
 import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
-import { useEffect, useState } from "react";
+
+type CategoryId = string | "all";
 
 export default function ProductListWithCategories() {
-  // const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState([0, 9]);
+  const [offset, setOffset] = useState([0, 11]);
+  const [hasMore, setHasMore] = useState(true);
 
-  const handleCategorySelect = (arg: string) => {
-    setActiveCategory(arg);
+  const loadProducts = async (category: CategoryId, reset = false) => {
+    setLoading(true);
+    try {
+      if (category === "all") {
+        const result = await fetchAllProducts(offset[0], offset[1]);
+        setProducts((prev) => (reset ? result : [...prev, ...result]));
+        if (result.length < 11) {
+          setHasMore(false);
+        }
+      } else {
+        const result = await fetchProductsByCategoryId(category);
+        setProducts(result);
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Ошибка загрузки товаров:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        if (activeCategory === "all") {
-          const result = await fetchAllProducts(pagination[0], pagination[1]);
-          setProducts(result);
-        } else {
-          const result = await fetchProductsByCategoryId(activeCategory);
-          setProducts(result);
-        }
-      } catch (error) {
-        console.error("Ошибка загрузки товаров:", error);
-      } finally {
-        setLoading(false);
+  const handleCategorySelect = (category: CategoryId) => {
+    setActiveCategory(category);
+    setOffset([0, 11]);
+    setHasMore(true);
+    loadProducts(category, true); // reset = true
+  };
+
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (!hasMore || loading || activeCategory !== "all") return;
+
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight - 100;
+
+      if (scrollPosition >= threshold) {
+        setOffset((prev) => [prev[0] + 11 + 1, prev[1] + 11 + 1]);
       }
+    }, 500),
+    [hasMore, loading, activeCategory]
+  );
+
+  useEffect(() => {
+    if (activeCategory === "all" && offset[0] === 0) {
+      loadProducts(activeCategory, true);
+    } else if (activeCategory === "all" && offset[0] !== 0) {
+      loadProducts(activeCategory);
     }
+  }, [offset]);
 
-    loadProducts();
-  }, [activeCategory]);
+  useEffect(() => {
+    const container = document.getElementById("scroll-container");
+    if (!container) return;
+    container.addEventListener("scroll", handleScroll);
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
-  if (loading) {
+  if (loading && products.length === 0) {
     return <p className="text-center py-8">Загрузка...</p>;
   }
 
@@ -54,7 +91,10 @@ export default function ProductListWithCategories() {
   }
 
   return (
-    <div className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide">
+    <div
+      id="scroll-container"
+      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide"
+    >
       <div className="grid grid-cols-3 gap-2">
         {products.map((product: Product) => (
           <Link
@@ -71,6 +111,15 @@ export default function ProductListWithCategories() {
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
       />
+
+      {loading && (
+        <p className="text-center text-gray-400 text-sm pt-4">Загрузка...</p>
+      )}
+      {!hasMore && activeCategory === "all" && (
+        <p className="text-center text-gray-300 text-xs pt-4">
+          Больше товаров нет
+        </p>
+      )}
     </div>
   );
 }
