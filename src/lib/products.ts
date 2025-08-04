@@ -1,49 +1,53 @@
-import database from "../../public/data/database.json";
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  stock: number;
-  available: boolean;
+import { supabase } from "@/utils/supabase/client";
+import { Product } from "@/types/product";
+// Получить все продукты
+export async function fetchAllProducts(
+  from: number,
+  to: number
+): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .range(from, to);
+  if (error) throw error;
+  return data || [];
 }
 
-export interface Database {
-  cartriges: Product[];
-  pods: Product[];
-  chaser: Product[];
-  octobar: Product[];
-  fl: Product[];
+// Получить продукт по ID
+export async function fetchProductById(id: string): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+// Получить продукты по ID категории
+export async function fetchProductsByCategoryId(
+  categoryId: string | "all"
+): Promise<Product[]> {
+  // if (categoryName === "all") {
+  //   return fetchAllProducts();
+  // }
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category_id", categoryId);
+
+  if (error) throw error;
+  return data || [];
 }
 
-export function getProductById(id: string): Product | null {
-  const db = database as Database;
-
-  // Search in all categories
-  const allProducts = [
-    ...db.cartriges,
-    ...db.pods,
-    ...db.chaser,
-    ...db.octobar,
-    ...db.fl,
-  ];
-
-  return allProducts.find((product) => product.id === id) || null;
+// Добавить продукт
+export async function createProduct(product: Partial<Product>) {
+  const { data, error } = await supabase.from("products").insert(product);
+  if (error) throw error;
+  return data;
 }
 
-export function getProductsByCategory(
-  category: keyof Database | "all"
-): Product[] {
-  const db = database as Database;
-  if (category === "all") {
-    return [...db.cartriges, ...db.pods, ...db.chaser, ...db.octobar, ...db.fl];
-  }
-  return db[category] || [];
-}
-
-export function getAllProducts(): Product[] {
-  const db = database as Database;
-  return [...db.cartriges, ...db.pods, ...db.chaser, ...db.octobar, ...db.fl];
+// Удалить
+export async function deleteProduct(id: string) {
+  const { error } = await supabase.from("products").delete().eq("id", id);
+  if (error) throw error;
 }
