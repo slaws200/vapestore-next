@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Product } from "../types/product";
 import { fetchAllCategories } from "../lib/categories";
 import { Category } from "../types/category";
 
 interface CategoryTabsProps {
-  onCategoryChange?: (products: Product[]) => void;
   onCategorySelect: (category: string) => void;
   activeCategory: string;
   className?: string;
@@ -23,7 +21,6 @@ const categoryDisplayNames = {
 };
 
 export default function CategoryTabs({
-  onCategoryChange,
   onCategorySelect,
   activeCategory,
   className = "",
@@ -41,7 +38,7 @@ export default function CategoryTabs({
       }
     }
     loadCategories();
-  }, [activeCategory, onCategoryChange]);
+  }, []);
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (scrollContainerRef.current) {

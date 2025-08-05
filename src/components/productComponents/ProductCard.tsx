@@ -12,9 +12,6 @@ export default function ProductCard({ product }: { product: Product }) {
           fill
           sizes="(max-width: 768px) 100vw"
           className="object-contain"
-          loading="lazy"
-          placeholder="blur"
-          blurDataURL={product.image}
         />
       </div>
       <div className="flex flex-col h-full justify-between">

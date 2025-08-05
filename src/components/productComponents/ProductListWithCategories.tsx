@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { ReactEventHandler, useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
-import { debounce } from "@/utils/debounce/debounce";
 import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
 
@@ -45,19 +44,31 @@ export default function ProductListWithCategories() {
     loadProducts(category, true); // reset = true
   };
 
-  const handleScroll = useCallback(
-    debounce(() => {
-      if (!hasMore || loading || activeCategory !== "all") return;
+  // const handleScroll = useCallback(
+  //   debounce(() => {
+  //     if (!hasMore || loading || activeCategory !== "all") return;
 
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const threshold = document.body.offsetHeight - 100;
+  //     const scrollPosition = window.innerHeight + window.scrollY;
+  //     const threshold = document.body.offsetHeight - 100;
 
-      if (scrollPosition >= threshold) {
-        setOffset((prev) => [prev[0] + 11 + 1, prev[1] + 11 + 1]);
+  //     if (scrollPosition >= threshold) {
+  //       setOffset((prev) => [prev[0] + 11 + 1, prev[1] + 11 + 1]);
+  //     }
+  //   }, 500),
+  //   [hasMore, loading, activeCategory]
+  // );
+
+  const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    console.log(e);
+    console.log(e.currentTarget);
+    console.log(scrollTop, scrollHeight, clientHeight);
+    if (!loading && hasMore) {
+      if (scrollTop + clientHeight === scrollHeight) {
+        setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
       }
-    }, 500),
-    [hasMore, loading, activeCategory]
-  );
+    }
+  };
 
   useEffect(() => {
     if (activeCategory === "all" && offset[0] === 0) {
@@ -66,15 +77,6 @@ export default function ProductListWithCategories() {
       loadProducts(activeCategory);
     }
   }, [offset]);
-
-  useEffect(() => {
-    const container = document.getElementById("scroll-container");
-    if (!container) return;
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
 
   if (loading && products.length === 0) {
     return <p className="text-center py-8">Загрузка...</p>;
@@ -92,7 +94,7 @@ export default function ProductListWithCategories() {
 
   return (
     <div
-      id="scroll-container"
+      onScroll={handleScroll}
       className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide"
     >
       <div className="grid grid-cols-3 gap-2">
