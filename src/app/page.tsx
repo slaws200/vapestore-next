@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <main className="min-h-screen overflow-y-hidden">
       <div className="mx-auto px-4">
-        <SearchInput />
+        {/* <SearchInput /> */}
         <ProductListWithCategories />
       </div>
     </main>

@@ -1,21 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getProductsByCategory, Database } from "../lib/products";
-import { Product } from "../types/product";
+import { fetchAllCategories } from "../lib/categories";
+import { Category } from "../types/category";
 
 interface CategoryTabsProps {
-  onCategoryChange?: (products: Product[]) => void;
-  onCategorySelect?: (category: keyof Database | "all") => void;
-  activeCategory?: keyof Database | "all";
+  onCategorySelect: (category: string) => void;
+  activeCategory: string;
   className?: string;
 }
 
-// Extended type to include "all" category
-type ExtendedCategory = keyof Database | "all";
-
 // Category display names mapping
-const categoryDisplayNames: Record<ExtendedCategory, string> = {
+const categoryDisplayNames = {
   all: "Все товары",
   cartriges: "Картриджи",
   pods: "Под-системы",
@@ -25,47 +21,24 @@ const categoryDisplayNames: Record<ExtendedCategory, string> = {
 };
 
 export default function CategoryTabs({
-  onCategoryChange,
   onCategorySelect,
-  activeCategory: externalActiveCategory,
+  activeCategory,
   className = "",
 }: CategoryTabsProps) {
-  const [internalActiveCategory, setInternalActiveCategory] =
-    useState<ExtendedCategory>("all");
-  const [categories, setCategories] = useState<ExtendedCategory[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Use external active category if provided, otherwise use internal state
-  const activeCategory = externalActiveCategory || internalActiveCategory;
-
   useEffect(() => {
-    // Extract categories from the database structure, including "all"
-    const dbCategories: ExtendedCategory[] = [
-      "all",
-      "cartriges",
-      "pods",
-      "chaser",
-      "octobar",
-      "fl",
-    ];
-    setCategories(dbCategories);
-  }, []);
-
-  useEffect(() => {
-    // Load products for the active category
-    const products = getProductsByCategory(activeCategory as keyof Database);
-    onCategoryChange?.(products);
-  }, [activeCategory, onCategoryChange]);
-
-  const handleCategoryClick = (category: ExtendedCategory) => {
-    if (externalActiveCategory !== undefined) {
-      // If external state is provided, call the callback
-      onCategorySelect?.(category);
-    } else {
-      // Otherwise, use internal state
-      setInternalActiveCategory(category);
+    async function loadCategories() {
+      try {
+        const result = await fetchAllCategories();
+        setCategories(result);
+      } catch (error) {
+        console.error("Ошибка загрузки категорий:", error);
+      }
     }
-  };
+    loadCategories();
+  }, []);
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (scrollContainerRef.current) {
@@ -93,32 +66,22 @@ export default function CategoryTabs({
           onWheel={handleWheel}
         >
           <div className="flex space-x-2 p-4 min-w-max">
-            {categories.map((category) => {
-              const isActive = activeCategory === category;
-              const products = getProductsByCategory(
-                category as keyof Database
-              );
-              const hasProducts = products.length > 0;
-
-              return (
-                <button
-                  key={category}
-                  onClick={() => handleCategoryClick(category)}
-                  disabled={!hasProducts}
-                  className={`
+            <button
+              key={"all"}
+              onClick={() => onCategorySelect("all")}
+              // disabled={!hasProducts}
+              className={`
                     px-4 py-3 rounded-lg font-medium text-sm whitespace-nowrap
                     transition-all duration-200 flex-shrink-0
                     ${
-                      isActive
+                      activeCategory === "all"
                         ? "bg-blue-600 text-white shadow-md"
-                        : hasProducts
-                        ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        : "bg-gray-50 text-gray-400 cursor-not-allowed"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }
                   `}
-                >
-                  {categoryDisplayNames[category]}
-                  {hasProducts && (
+            >
+              {"Все товары"}
+              {/* {hasProducts && (
                     <span
                       className={`
                       ml-2 px-2 py-0.5 rounded-full text-xs
@@ -127,7 +90,45 @@ export default function CategoryTabs({
                     >
                       {products.length}
                     </span>
-                  )}
+                  )} */}
+            </button>
+            {categories.map((category) => {
+              const isActive = activeCategory === category.id;
+              // const products = getProductsByCategory(
+              //   category as keyof Database
+              // );
+              // const hasProducts = products.length > 0;
+
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => onCategorySelect(category.id)}
+                  // disabled={!hasProducts}
+                  className={`
+                    px-4 py-3 rounded-lg font-medium text-sm whitespace-nowrap
+                    transition-all duration-200 flex-shrink-0
+                    ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-md"
+                        : // : hasProducts
+                          "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      // : "bg-gray-50 text-gray-400 cursor-not-allowed"
+                    }
+                  `}
+                >
+                  {categoryDisplayNames[
+                    category.name as keyof typeof categoryDisplayNames
+                  ] || category.name}
+                  {/* {hasProducts && (
+                    <span
+                      className={`
+                      ml-2 px-2 py-0.5 rounded-full text-xs
+                      ${isActive ? "bg-blue-500" : "bg-gray-200"}
+                    `}
+                    >
+                      {products.length}
+                    </span>
+                  )} */}
                 </button>
               );
             })}
