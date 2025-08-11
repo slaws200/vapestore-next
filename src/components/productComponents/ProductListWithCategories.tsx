@@ -6,10 +6,15 @@ import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
 import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
+import { Category } from "../../types/category";
 
 type CategoryId = string | "all";
 
-export default function ProductListWithCategories() {
+interface IProps {
+  allCategories: Category[];
+}
+
+export default function ProductListWithCategories({ allCategories }: IProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,6 +115,7 @@ export default function ProductListWithCategories() {
       </div>
 
       <CategoryTabs
+        allCategories={allCategories}
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
       />

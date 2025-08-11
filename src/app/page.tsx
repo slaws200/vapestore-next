@@ -1,12 +1,24 @@
 // import SearchInput from "@/components/SearchInput";
 import ProductListWithCategories from "@/components/productComponents/ProductListWithCategories";
+import TelegramInit from "../components/TelegramInit";
+import { fetchAllCategories } from "../lib/categories";
+import { Category } from "@/types/category";
 
-export default function Home() {
+export default async function Home() {
+  let categories: Category[] = [];
+
+  try {
+    categories = await fetchAllCategories();
+  } catch (error) {
+    console.error("Ошибка загрузки категорий:", error);
+  }
+
   return (
     <main className="min-h-screen overflow-y-hidden">
+      <TelegramInit />
       <div className="mx-auto px-4">
         {/* <SearchInput /> */}
-        <ProductListWithCategories />
+        <ProductListWithCategories allCategories={categories} />
       </div>
     </main>
   );

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { fetchAllCategories } from "../lib/categories";
+// import { fetchAllCategories } from "../lib/categories";
 import { Category } from "../types/category";
 
 interface CategoryTabsProps {
+  allCategories: Category[];
   onCategorySelect: (category: string) => void;
   activeCategory: string;
   className?: string;
@@ -21,6 +22,7 @@ const categoryDisplayNames = {
 };
 
 export default function CategoryTabs({
+  allCategories,
   onCategorySelect,
   activeCategory,
   className = "",
@@ -29,15 +31,16 @@ export default function CategoryTabs({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    async function loadCategories() {
-      try {
-        const result = await fetchAllCategories();
-        setCategories(result);
-      } catch (error) {
-        console.error("Ошибка загрузки категорий:", error);
-      }
-    }
-    loadCategories();
+    // async function loadCategories() {
+    //   try {
+    //     const result = await fetchAllCategories();
+    //     setCategories(result);
+    //   } catch (error) {
+    //     console.error("Ошибка загрузки категорий:", error);
+    //   }
+    // }
+    // loadCategories();
+    setCategories(allCategories);
   }, []);
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
