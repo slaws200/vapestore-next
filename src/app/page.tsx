@@ -14,8 +14,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen overflow-y-hidden">
-      <TelegramInit />
+    <main className="min-h-screen overflow-y-hidden bg-linear-to-r from-zinc-300 to-zinc-900">
+      {/* <TelegramInit /> */}
       <div className="mx-auto px-4">
         {/* <SearchInput /> */}
         <ProductListWithCategories allCategories={categories} />

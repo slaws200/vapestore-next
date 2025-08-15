@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactEventHandler, useEffect, useState } from "react";
+import { ReactEventHandler, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
@@ -21,6 +21,7 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
   const [loading, setLoading] = useState(true);
   const [offset, setOffset] = useState([0, 11]);
   const [hasMore, setHasMore] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const loadProducts = async (category: CategoryId, reset = false) => {
     setLoading(true);
@@ -65,10 +66,8 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
   // );
 
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    console.log(e);
-    console.log(e.currentTarget);
-    console.log(scrollTop, scrollHeight, clientHeight);
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current ?? e.currentTarget;
     if (!loading && hasMore) {
       if (scrollTop + clientHeight === scrollHeight) {
         setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
@@ -84,8 +83,17 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
     }
   }, [offset]);
 
+  useEffect(() => {
+    if (loading && scrollContainerRef.current && offset[0] !== 0) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [loading]);
+
   if (loading && products.length === 0) {
-    return <p className="text-center py-8">Загрузка...</p>;
+    return <Loader />;
   }
 
   if (!products.length) {
@@ -100,6 +108,7 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
 
   return (
     <div
+      ref={scrollContainerRef}
       onScroll={handleScroll}
       className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide"
     >
