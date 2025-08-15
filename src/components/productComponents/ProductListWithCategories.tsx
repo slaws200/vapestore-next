@@ -7,6 +7,7 @@ import { Product } from "@/types/product";
 import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
 import { Category } from "../../types/category";
+import Loader from "../loader";
 
 type CategoryId = string | "all";
 
@@ -120,9 +121,7 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
         activeCategory={activeCategory}
       />
 
-      {loading && (
-        <p className="text-center text-gray-400 text-sm pt-4">Загрузка...</p>
-      )}
+      {loading && <Loader />}
       {!hasMore && activeCategory === "all" && (
         <p className="text-center text-gray-300 text-xs pt-4">
           Больше товаров нет

@@ -1,6 +1,6 @@
 // import SearchInput from "@/components/SearchInput";
 import ProductListWithCategories from "@/components/productComponents/ProductListWithCategories";
-import TelegramInit from "../components/TelegramInit";
+import TelegramInit from "@/components/TelegramInit";
 import { fetchAllCategories } from "../lib/categories";
 import { Category } from "@/types/category";
 
