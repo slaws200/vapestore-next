@@ -6,14 +6,25 @@ import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
 import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
+import { Category } from "@/types/category";
 
 type CategoryId = string | "all";
 
-export default function ProductListWithCategories() {
+interface IProductListProps {
+  preloadedData?: Product[];
+  startOffset?: [number, number];
+  preloadedCategories?: Category[];
+}
+
+export default function ProductListWithCategories({
+  preloadedData = [],
+  startOffset = [0, 11],
+  preloadedCategories = [],
+}: IProductListProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [offset, setOffset] = useState([0, 11]);
+  const [products, setProducts] = useState<Product[]>(preloadedData);
+  const [loading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(startOffset);
   const [hasMore, setHasMore] = useState(true);
 
   const loadProducts = async (category: CategoryId, reset = false) => {
@@ -44,25 +55,11 @@ export default function ProductListWithCategories() {
     loadProducts(category, true); // reset = true
   };
 
-  // const handleScroll = useCallback(
-  //   debounce(() => {
-  //     if (!hasMore || loading || activeCategory !== "all") return;
-
-  //     const scrollPosition = window.innerHeight + window.scrollY;
-  //     const threshold = document.body.offsetHeight - 100;
-
-  //     if (scrollPosition >= threshold) {
-  //       setOffset((prev) => [prev[0] + 11 + 1, prev[1] + 11 + 1]);
-  //     }
-  //   }, 500),
-  //   [hasMore, loading, activeCategory]
-  // );
-
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    console.log(e);
-    console.log(e.currentTarget);
-    console.log(scrollTop, scrollHeight, clientHeight);
+    // console.log(e);
+    // console.log(e.currentTarget);
+    // console.log(scrollTop, scrollHeight, clientHeight);
     if (!loading && hasMore) {
       if (scrollTop + clientHeight === scrollHeight) {
         setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
@@ -72,8 +69,10 @@ export default function ProductListWithCategories() {
 
   useEffect(() => {
     if (activeCategory === "all" && offset[0] === 0) {
-      loadProducts(activeCategory, true);
-    } else if (activeCategory === "all" && offset[0] !== 0) {
+      if (!preloadedData.length) {
+        loadProducts(activeCategory, true);
+      }
+    } else if (activeCategory === "all" && offset[0]) {
       loadProducts(activeCategory);
     }
   }, [offset]);
@@ -95,7 +94,7 @@ export default function ProductListWithCategories() {
   return (
     <div
       onScroll={handleScroll}
-      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide"
+      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide "
     >
       <div className="grid grid-cols-3 gap-2">
         {products.map((product: Product) => (
@@ -112,6 +111,7 @@ export default function ProductListWithCategories() {
       <CategoryTabs
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
+        preloadedCategories={preloadedCategories}
       />
 
       {loading && (

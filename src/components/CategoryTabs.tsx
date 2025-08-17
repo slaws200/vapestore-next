@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { fetchAllCategories } from "../lib/categories";
+import { useRef } from "react";
 import { Category } from "../types/category";
 
 interface CategoryTabsProps {
   onCategorySelect: (category: string) => void;
   activeCategory: string;
   className?: string;
+  preloadedCategories: Category[];
 }
 
 // Category display names mapping
@@ -24,21 +24,9 @@ export default function CategoryTabs({
   onCategorySelect,
   activeCategory,
   className = "",
+  preloadedCategories,
 }: CategoryTabsProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const result = await fetchAllCategories();
-        setCategories(result);
-      } catch (error) {
-        console.error("Ошибка загрузки категорий:", error);
-      }
-    }
-    loadCategories();
-  }, []);
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (scrollContainerRef.current) {
@@ -46,7 +34,7 @@ export default function CategoryTabs({
     }
   };
 
-  if (categories.length === 0) {
+  if (preloadedCategories.length === 0) {
     return (
       <div className={`flex justify-center items-center py-4 ${className}`}>
         <p className="text-gray-500">Загрузка категорий...</p>
@@ -92,7 +80,7 @@ export default function CategoryTabs({
                     </span>
                   )} */}
             </button>
-            {categories.map((category) => {
+            {preloadedCategories.map((category) => {
               const isActive = activeCategory === category.id;
               // const products = getProductsByCategory(
               //   category as keyof Database
