@@ -119,7 +119,6 @@ export default function ProductListWithCategories({
       </div>
 
       <CategoryTabs
-        allCategories={allCategories}
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
         preloadedCategories={preloadedCategories}

@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { Category } from "../types/category";
 
 interface CategoryTabsProps {
-  allCategories: Category[];
   onCategorySelect: (category: string) => void;
   activeCategory: string;
   className?: string;
@@ -22,7 +21,6 @@ const categoryDisplayNames = {
 };
 
 export default function CategoryTabs({
-  allCategories,
   onCategorySelect,
   activeCategory,
   className = "",
