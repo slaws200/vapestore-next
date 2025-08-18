@@ -11,15 +11,21 @@ import Loader from "../loader";
 
 type CategoryId = string | "all";
 
-interface IProps {
-  allCategories: Category[];
+interface IProductListProps {
+  preloadedData?: Product[];
+  startOffset?: [number, number];
+  preloadedCategories?: Category[];
 }
 
-export default function ProductListWithCategories({ allCategories }: IProps) {
+export default function ProductListWithCategories({
+  preloadedData = [],
+  startOffset = [0, 11],
+  preloadedCategories = [],
+}: IProductListProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [offset, setOffset] = useState([0, 11]);
+  const [products, setProducts] = useState<Product[]>(preloadedData);
+  const [loading, setLoading] = useState(false);
+  const [offset, setOffset] = useState(startOffset);
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -51,20 +57,6 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
     loadProducts(category, true); // reset = true
   };
 
-  // const handleScroll = useCallback(
-  //   debounce(() => {
-  //     if (!hasMore || loading || activeCategory !== "all") return;
-
-  //     const scrollPosition = window.innerHeight + window.scrollY;
-  //     const threshold = document.body.offsetHeight - 100;
-
-  //     if (scrollPosition >= threshold) {
-  //       setOffset((prev) => [prev[0] + 11 + 1, prev[1] + 11 + 1]);
-  //     }
-  //   }, 500),
-  //   [hasMore, loading, activeCategory]
-  // );
-
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current ?? e.currentTarget;
@@ -77,8 +69,10 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
 
   useEffect(() => {
     if (activeCategory === "all" && offset[0] === 0) {
-      loadProducts(activeCategory, true);
-    } else if (activeCategory === "all" && offset[0] !== 0) {
+      if (!preloadedData.length) {
+        loadProducts(activeCategory, true);
+      }
+    } else if (activeCategory === "all" && offset[0]) {
       loadProducts(activeCategory);
     }
   }, [offset]);
@@ -110,7 +104,7 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide"
+      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide "
     >
       <div className="grid grid-cols-3 gap-2">
         {products.map((product: Product) => (
@@ -128,6 +122,7 @@ export default function ProductListWithCategories({ allCategories }: IProps) {
         allCategories={allCategories}
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
+        preloadedCategories={preloadedCategories}
       />
 
       {loading && <Loader />}
