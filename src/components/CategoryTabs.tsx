@@ -44,7 +44,7 @@ export default function CategoryTabs({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}
+      className={`fixed top-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg ${className}`}
     >
       {/* Category Tabs */}
       <div className="relative">
@@ -53,13 +53,13 @@ export default function CategoryTabs({
           className="overflow-x-auto scrollbar-hide"
           onWheel={handleWheel}
         >
-          <div className="flex space-x-2 p-4 min-w-max">
+          <div className="flex space-x-2 p-2 min-w-max">
             <button
               key={"all"}
               onClick={() => onCategorySelect("all")}
               // disabled={!hasProducts}
               className={`
-                    px-4 py-3 rounded-lg font-medium text-sm whitespace-nowrap
+                    px-4 py-1 rounded-lg font-medium text-sm whitespace-nowrap
                     transition-all duration-200 flex-shrink-0
                     ${
                       activeCategory === "all"
@@ -93,7 +93,7 @@ export default function CategoryTabs({
                   onClick={() => onCategorySelect(category.id)}
                   // disabled={!hasProducts}
                   className={`
-                    px-4 py-3 rounded-lg font-medium text-sm whitespace-nowrap
+                    px-2 py-2 rounded-lg font-medium text-sm whitespace-nowrap
                     transition-all duration-200 flex-shrink-0
                     ${
                       isActive

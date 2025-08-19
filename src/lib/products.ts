@@ -25,15 +25,19 @@ export async function fetchProductById(id: string): Promise<Product | null> {
 }
 // Получить продукты по ID категории
 export async function fetchProductsByCategoryId(
-  categoryId: string | "all"
+  categoryId: string | "all",
+  from: number,
+  to: number
 ): Promise<Product[]> {
-  // if (categoryName === "all") {
-  //   return fetchAllProducts();
-  // }
+  if (categoryId === "all") {
+    return fetchAllProducts(from, to);
+  }
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .eq("category_id", categoryId);
+    .eq("category_id", categoryId)
+    .range(from, to);
 
   if (error) throw error;
   return data || [];
