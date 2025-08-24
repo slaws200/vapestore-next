@@ -3,7 +3,6 @@
 import { Product } from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 export default function ProductDetailCard({ product }: { product: Product }) {
   const orderHandler = async () => {
@@ -71,11 +70,19 @@ export default function ProductDetailCard({ product }: { product: Product }) {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 {product.name}
               </h3>
-              <p className="text-3xl font-bold text-blue-600 mb-4">
-                ₽{product.price}
-              </p>
+              <div className="flex justify-between align-middle">
+                <p className="text-2xl font-bold text-blue-600 mb-4">
+                  Цена ₽{product.price}
+                </p>
+                <button
+                  onClick={orderHandler}
+                  className="bg-sky-400 text-white text-lg rounded-md h-7 w-21"
+                >
+                  Заказать
+                </button>
+              </div>
 
-              <div className="space-y-3">
+              {/* <div className="space-y-3">
                 <div className="flex items-center">
                   <span className="text-gray-600 w-25">В наличии:</span>
                   <span
@@ -86,22 +93,16 @@ export default function ProductDetailCard({ product }: { product: Product }) {
                     {product.stock! > 0 ? `${product.stock}` : "Нет в наличии"}
                   </span>
                 </div>
-              </div>
+              </div> */}
 
               <div className="prose max-w-none">
-                <h4 className="text-lg text-gray-700 font-semibold mb-2">
+                <h4 className="text-lg text-gray-700 font-semibold">
                   Описание:
                 </h4>
-                <p className="text-gray-700 whitespace-pre-line">
+                <p className="text-gray-700 whitespace-pre-line text-lg/5">
                   {product.description}
                 </p>
               </div>
-              <button
-                onClick={orderHandler}
-                className="fixed bottom-4 left-0 right-0 z-50 bg-sky-400 text-white px-4 py-2 rounded-md"
-              >
-                Заказать
-              </button>
             </div>
           </div>
         </div>
