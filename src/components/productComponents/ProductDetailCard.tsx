@@ -42,7 +42,7 @@ export default function ProductDetailCard({ product }: { product: Product }) {
     }
   };
   return (
-    <div className="min-h-[100vh] overflow-y-auto scrollbar-hide">
+    <div className="min-h-[100vh] overflow-y-hidden">
       <div className="max-w-4xl mx-auto p-4">
         <Link
           href="/"
@@ -54,7 +54,7 @@ export default function ProductDetailCard({ product }: { product: Product }) {
         <div className="rounded-lg p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">
-              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-y-hidden">
                 <Image
                   src={`/${product.image}`}
                   alt={product.name}

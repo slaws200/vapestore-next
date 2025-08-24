@@ -8,6 +8,7 @@ import CategoryTabs from "@/components/CategoryTabs";
 import ProductCard from "./ProductCard";
 import { Category } from "../../types/category";
 import Loader from "../loader";
+import { useQuery } from "@tanstack/react-query";
 
 type CategoryId = string | "all";
 
@@ -29,6 +30,18 @@ export default function ProductListWithCategories({
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // TanStack Query for category-specific products
+  const {
+    data: categoryProducts,
+    isLoading: isLoadingCategory,
+    error: categoryError,
+  } = useQuery({
+    queryKey: ["products", "category", activeCategory],
+    queryFn: () => fetchProductsByCategoryId(activeCategory),
+    enabled: activeCategory !== "all",
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
   const loadProducts = async (category: CategoryId, reset = false) => {
     setLoading(true);
     try {
@@ -38,10 +51,6 @@ export default function ProductListWithCategories({
         if (result.length < 11) {
           setHasMore(false);
         }
-      } else {
-        const result = await fetchProductsByCategoryId(category);
-        setProducts(result);
-        setHasMore(false);
       }
     } catch (error) {
       console.error("Ошибка загрузки товаров:", error);
@@ -50,17 +59,35 @@ export default function ProductListWithCategories({
     }
   };
 
+  // Update products when category changes or when category data is available
+  useEffect(() => {
+    if (activeCategory === "all") {
+      // Keep existing logic for "all" category
+      if (offset[0] === 0 && !preloadedData.length) {
+        loadProducts(activeCategory, true);
+      }
+    } else {
+      // Use TanStack Query data for specific categories
+      if (categoryProducts) {
+        setProducts(categoryProducts);
+        setHasMore(false);
+      }
+    }
+  }, [activeCategory, categoryProducts, offset, preloadedData.length]);
+
   const handleCategorySelect = (category: CategoryId) => {
     setActiveCategory(category);
     setOffset([0, 11]);
     setHasMore(true);
-    loadProducts(category, true); // reset = true
+    if (category === "all") {
+      loadProducts(category, true); // reset = true
+    }
   };
 
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current ?? e.currentTarget;
-    if (!loading && hasMore) {
+    if (!loading && hasMore && activeCategory === "all") {
       if (scrollTop + clientHeight === scrollHeight) {
         setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
       }
@@ -85,6 +112,22 @@ export default function ProductListWithCategories({
       });
     }
   }, [loading]);
+
+  // Show loading state for category-specific queries
+  if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
+    return <Loader />;
+  }
+
+  // Show error state for category-specific queries
+  if (activeCategory !== "all" && categoryError) {
+    return (
+      <div className="col-span-full flex justify-center items-center py-12">
+        <p className="text-red-500 text-lg">
+          Ошибка загрузки товаров: {categoryError.message}
+        </p>
+      </div>
+    );
+  }
 
   if (loading && products.length === 0) {
     return <Loader />;
@@ -126,7 +169,7 @@ export default function ProductListWithCategories({
 
       {loading && <Loader />}
       {!hasMore && activeCategory === "all" && (
-        <p className="text-center text-gray-300 text-xs pt-4">
+        <p className="text-center text-gray-300 text-xs p-2">
           Больше товаров нет
         </p>
       )}
