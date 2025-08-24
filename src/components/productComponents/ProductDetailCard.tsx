@@ -48,7 +48,7 @@ export default function ProductDetailCard({ product }: { product: Product }) {
           href="/"
           className="font-bold text-white bg-sky-400 rounded-md w-fit p-2"
         >
-          &larr; Вернуться на главную
+          &larr; Назад
         </Link>
 
         <div className="rounded-lg p-6 mb-6">
@@ -75,7 +75,7 @@ export default function ProductDetailCard({ product }: { product: Product }) {
                 ₽{product.price}
               </p>
 
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <span className="text-gray-600 w-25">В наличии:</span>
                   <span

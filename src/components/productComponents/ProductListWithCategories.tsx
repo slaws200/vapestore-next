@@ -77,6 +77,7 @@ export default function ProductListWithCategories({
 
   const handleCategorySelect = (category: CategoryId) => {
     setActiveCategory(category);
+    setHasMore(true);
     setOffset([0, 11]);
     setHasMore(true);
     if (category === "all") {
@@ -95,14 +96,18 @@ export default function ProductListWithCategories({
   };
 
   useEffect(() => {
-    if (activeCategory === "all" && offset[0] === 0) {
-      if (!preloadedData.length) {
+    if (offset[0] === 0) {
+      if (activeCategory === "all") {
+        if (!preloadedData.length || preloadedData.length <= 12) {
+          loadProducts(activeCategory, true);
+        }
+      } else {
         loadProducts(activeCategory, true);
       }
-    } else if (activeCategory === "all" && offset[0]) {
+    } else {
       loadProducts(activeCategory);
     }
-  }, [offset]);
+  }, [offset, activeCategory]);
 
   useEffect(() => {
     if (loading && scrollContainerRef.current && offset[0] !== 0) {
@@ -147,8 +152,13 @@ export default function ProductListWithCategories({
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="max-h-[100vh] pt-14 pb-20 overflow-y-auto scrollbar-hide "
+      className="max-h-[100vh] overflow-y-auto scrollbar-hide pt-14"
     >
+      <CategoryTabs
+        onCategorySelect={handleCategorySelect}
+        activeCategory={activeCategory}
+        preloadedCategories={preloadedCategories}
+      />
       <div className="grid grid-cols-3 gap-2">
         {products.map((product: Product) => (
           <Link
@@ -160,12 +170,6 @@ export default function ProductListWithCategories({
           </Link>
         ))}
       </div>
-
-      <CategoryTabs
-        onCategorySelect={handleCategorySelect}
-        activeCategory={activeCategory}
-        preloadedCategories={preloadedCategories}
-      />
 
       {loading && <Loader />}
       {!hasMore && activeCategory === "all" && (
