@@ -6,4 +6,5 @@ export type Product = {
   description?: string; // Описание может быть необязательным
   stock?: number;
   available: boolean;
+  category_id: string;
 };

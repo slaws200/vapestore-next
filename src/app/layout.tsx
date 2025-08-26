@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-160 m-auto overflow-y-hidden py-5 `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-100 m-auto overflow-y-hidden py-5 `}
       >
         <TelegramInit />
         <ReactQueryProvider>

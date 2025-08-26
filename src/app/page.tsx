@@ -7,7 +7,7 @@ export default async function Home() {
   const initialProducts = await fetchAllProducts(0, 11);
   const initialCategories = await fetchAllCategories();
   return (
-    <main className="min-h-screen overflow-y-hidden">
+    <main className="overflow-y-hidden">
       {/* <TelegramInit /> */}
       <div className="mx-auto px-4">
         {/* <SearchInput /> */}

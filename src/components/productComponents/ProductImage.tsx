@@ -12,7 +12,9 @@ export function ProductImage({ product, className = "" }: ProductImageProps) {
       className={`relative aspect-square bg-gray-100 rounded-lg overflow-hidden ${className}`}
     >
       <Image
-        src={`/${product.image}`}
+        src={
+          product.image.startsWith("http") ? product.image : `/${product.image}`
+        }
         alt={product.name}
         className="object-contain"
         fill

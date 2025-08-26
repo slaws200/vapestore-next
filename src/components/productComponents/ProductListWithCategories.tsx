@@ -88,8 +88,9 @@ export default function ProductListWithCategories({
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current ?? e.currentTarget;
+    console.log(scrollTop, scrollHeight, clientHeight);
     if (!loading && hasMore && activeCategory === "all") {
-      if (scrollTop + clientHeight === scrollHeight) {
+      if (scrollTop + clientHeight > scrollHeight - 21) {
         setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
       }
     }
@@ -152,7 +153,7 @@ export default function ProductListWithCategories({
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="max-h-[100vh] overflow-y-auto scrollbar-hide pt-14"
+      className="max-h-[100vh] overflow-y-auto scrollbar-hide py-12"
     >
       <CategoryTabs
         onCategorySelect={handleCategorySelect}
