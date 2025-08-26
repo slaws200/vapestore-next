@@ -1,125 +1,26 @@
 "use client";
 
 import { Product } from "@/types/product";
-import { backButton, initData, isTMA, User } from "@telegram-apps/sdk-react";
-import Image from "next/image";
-import { redirect, RedirectType } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useTelegram } from "@/hooks/useTelegram";
+import { ProductImage } from "@/components/productComponents/ProductImage";
+import { ProductInfo } from "@/components/productComponents/ProductInfo";
 
-export default function ProductDetailCard({ product }: { product: Product }) {
-  const [userData, setUserData] = useState<User | undefined>(undefined);
+interface ProductDetailCardProps {
+  product: Product;
+}
 
-  useEffect(() => {
-    if (!isTMA()) return;
-    initData.restore();
-    setUserData(initData.user());
-    const handleClick = () => {
-      redirect("/", RedirectType.replace);
-    };
-    backButton.show();
+export default function ProductDetailCard({ product }: ProductDetailCardProps) {
+  const { userData } = useTelegram();
 
-    // подписаться на клик
-    backButton.onClick(handleClick);
-
-    // очистка
-    return () => {
-      backButton.offClick(handleClick);
-      backButton.hide();
-    };
-  }, []);
-
-  const orderHandler = async () => {
-    if (!product) {
-      console.error("Продукт отсутствует, запрос не будет отправлен.");
-      return;
-    }
-
-    const reqBody = {
-      ...product,
-      id: 777,
-      username: "battlegear",
-    };
-
-    try {
-      const response = await fetch(
-        "https://mybot-pmod.onrender.com/sendHello",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify(reqBody),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Ошибка HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Ответ от сервера:", data);
-    } catch (error) {
-      console.error("Ошибка при отправке запроса:", error);
-    }
-  };
   return (
-    <div className="min-h-[100vh] overflow-y-hidden">
+    <div className="min-h-screen overflow-y-hidden">
       <div className="max-w-4xl mx-auto p-4">
         <div className="rounded-lg p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">
-              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-y-hidden">
-                <Image
-                  src={`/${product.image}`}
-                  alt={product.name}
-                  className="object-contain"
-                  fill
-                  loading="lazy"
-                  placeholder="blur"
-                  blurDataURL={product.image}
-                />
-              </div>
+              <ProductImage product={product} />
             </div>
-
-            <div className="md:w-2/3">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                {product.name}
-              </h3>
-              <div className="flex justify-between align-middle">
-                <p className="text-2xl font-bold text-blue-600 mb-4">
-                  Цена ₽{product.price}
-                </p>
-                <button
-                  onClick={orderHandler}
-                  className="bg-sky-400 text-white text-lg rounded-md h-7 w-21"
-                >
-                  Заказать
-                </button>
-              </div>
-
-              {/* <div className="space-y-3">
-                <div className="flex items-center">
-                  <span className="text-gray-600 w-25">В наличии:</span>
-                  <span
-                    className={`font-medium ${
-                      product.stock! > 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {product.stock! > 0 ? `${product.stock}` : "Нет в наличии"}
-                  </span>
-                </div>
-              </div> */}
-
-              <div className="prose max-w-none">
-                <h4 className="text-lg text-gray-700 font-semibold">
-                  Описание:
-                </h4>
-                <p className="text-gray-700 whitespace-pre-line text-lg/5">
-                  {product.description}
-                </p>
-              </div>
-            </div>
+            <ProductInfo product={product} userData={userData} />
           </div>
         </div>
       </div>
