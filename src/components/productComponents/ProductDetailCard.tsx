@@ -1,10 +1,33 @@
 "use client";
 
 import { Product } from "@/types/product";
+import { backButton, initData, isTMA, User } from "@telegram-apps/sdk-react";
 import Image from "next/image";
-import Link from "next/link";
+import { redirect, RedirectType } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ProductDetailCard({ product }: { product: Product }) {
+  const [userData, setUserData] = useState<User | undefined>(undefined);
+
+  useEffect(() => {
+    if (!isTMA()) return;
+    initData.restore();
+    setUserData(initData.user());
+    const handleClick = () => {
+      redirect("/", RedirectType.replace);
+    };
+    backButton.show();
+
+    // подписаться на клик
+    backButton.onClick(handleClick);
+
+    // очистка
+    return () => {
+      backButton.offClick(handleClick);
+      backButton.hide();
+    };
+  }, []);
+
   const orderHandler = async () => {
     if (!product) {
       console.error("Продукт отсутствует, запрос не будет отправлен.");
@@ -43,13 +66,6 @@ export default function ProductDetailCard({ product }: { product: Product }) {
   return (
     <div className="min-h-[100vh] overflow-y-hidden">
       <div className="max-w-4xl mx-auto p-4">
-        <Link
-          href="/"
-          className="font-bold text-white bg-sky-400 rounded-md w-fit p-2"
-        >
-          &larr; Назад
-        </Link>
-
         <div className="rounded-lg p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3">
