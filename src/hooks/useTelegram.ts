@@ -3,6 +3,10 @@ import { redirect, RedirectType } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHapticFeedback } from "./useHapticFeedback";
 
+/**
+ * Хук для получения пользовательских данных и isInTMA признака
+ */
+
 export function useTelegram() {
   const [userData, setUserData] = useState<User | undefined>(undefined);
   const { impact } = useHapticFeedback();

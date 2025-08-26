@@ -1,14 +1,14 @@
 "use client";
 
-import { ReactEventHandler, useEffect, useState, useRef } from "react";
-import Link from "next/link";
+import CategoryTabs from "@/components/CategoryTabs";
 import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
 import { Product } from "@/types/product";
-import CategoryTabs from "@/components/CategoryTabs";
-import ProductCard from "./ProductCard";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { ReactEventHandler, useEffect, useRef, useState } from "react";
 import { Category } from "../../types/category";
 import Loader from "../loader";
-import { useQuery } from "@tanstack/react-query";
+import ProductCard from "./ProductCard";
 
 type CategoryId = string | "all";
 

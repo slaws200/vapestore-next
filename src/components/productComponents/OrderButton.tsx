@@ -1,9 +1,10 @@
-import { Product } from "@/types/product";
-import { User } from "@telegram-apps/sdk-react";
-import { useState } from "react";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useTelegramPopup } from "@/hooks/useTelegramPopup";
 import { OrderService } from "@/lib/OrderService";
+import { Product } from "@/types/product";
+import { User } from "@telegram-apps/sdk-react";
+import { redirect } from "next/navigation";
+import { useState } from "react";
 import Loader from "../loader";
 
 interface OrderButtonProps {
@@ -51,11 +52,7 @@ export function OrderButton({
 
       // Показываем результат
       if (orderResult.success) {
-        await openPopup({
-          title: "",
-          message: orderResult.message || "Заказ успешно оформлен!",
-          buttons: [{ id: "ok", type: "ok", text: "Ок" }],
-        });
+        redirect("/checkout");
       } else {
         await openPopup({
           title: "Ошибка",
