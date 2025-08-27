@@ -1,13 +1,19 @@
 import { Product } from "@/types/product";
 import Image from "next/image";
 import React from "react";
+import NotFound from "../../app/not-found";
 
 export default function ProductCard({ product }: { product: Product }) {
+  if (!product) return <NotFound />;
   return (
     <div className="h-full flex flex-col justify-between ">
       <div className="relative aspect-square bg-gray-100 rounded-md mb-1">
         <Image
-          src={`/${product.image}`}
+          src={
+            product.image.startsWith("http")
+              ? product.image
+              : `/${product.image}`
+          }
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw"
@@ -15,21 +21,17 @@ export default function ProductCard({ product }: { product: Product }) {
         />
       </div>
       <div className="flex flex-col h-full justify-between">
-        <h2 className="text-sm font-semibold text-gray-900 mb-1">
+        <h2 className="text-xs font-semibold text-gray-900 mb-1">
           {product.name}
         </h2>
         <div>
-          <p className="text-blue-600 font-bold text-sm mb-1">
-            ₽{product.price}
-          </p>
+          <p className="text-blue-600 font-bold text-xs">₽{product.price}</p>
           <span
-            className={`text-sm font-medium ${
-              product.stock! > 0 ? "text-green-600" : "text-red-600"
+            className={`text-xs font-medium ${
+              product.available ? "text-green-600" : "text-red-600"
             }`}
           >
-            {product.stock! > 0
-              ? `${product.stock} в наличии`
-              : "Нет в наличии"}
+            {product.available ? "В наличии" : "Нет в наличии"}
           </span>
         </div>
       </div>

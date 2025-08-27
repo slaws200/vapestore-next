@@ -10,12 +10,17 @@ interface ProductInfoProps {
 export function ProductInfo({ product, userData }: ProductInfoProps) {
   return (
     <div className="md:w-2/3">
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
+      <span
+        className={`text-sm font-medium ${
+          product.available ? "text-green-600" : "text-red-600"
+        }`}
+      >
+        {product.available ? "В наличии" : "Нет в наличии"}
+      </span>
 
       <div className="flex justify-between items-center mb-6">
-        <p className="text-2xl font-bold text-blue-600">
-          Цена ₽{product.price}
-        </p>
+        <p className="text-xl font-bold text-blue-600">Цена ₽{product.price}</p>
         <OrderButton product={product} userData={userData} />
       </div>
 

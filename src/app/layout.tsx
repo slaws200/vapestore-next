@@ -1,6 +1,6 @@
 import TelegramInit from "@/components/TelegramInit";
 import ReactQueryProvider from "@/lib/queryClient/ReactQueryProvider";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,11 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-160 m-auto overflow-y-hidden py-5 `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-100 m-auto overflow-y-hidden py-5 `}
       >
         <TelegramInit />
         <ReactQueryProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           {children}
         </ReactQueryProvider>
       </body>
