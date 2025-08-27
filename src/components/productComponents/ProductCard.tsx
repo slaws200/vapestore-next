@@ -1,8 +1,10 @@
 import { Product } from "@/types/product";
 import Image from "next/image";
 import React from "react";
+import NotFound from "../../app/not-found";
 
 export default function ProductCard({ product }: { product: Product }) {
+  if (!product) return <NotFound />;
   return (
     <div className="h-full flex flex-col justify-between ">
       <div className="relative aspect-square bg-gray-100 rounded-md mb-1">

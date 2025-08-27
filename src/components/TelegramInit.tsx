@@ -1,6 +1,6 @@
 "use client";
 
-import { backButton, init, isTMA } from "@telegram-apps/sdk";
+import { backButton, init, isTMA, viewport } from "@telegram-apps/sdk";
 import { postEvent } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import { themeParams } from "@telegram-apps/sdk";
@@ -14,6 +14,10 @@ export default function TelegramInit() {
 
     init();
     backButton.mount();
+    if (viewport.mount.isAvailable()) {
+      viewport.mount(); // монтируем
+      viewport.expand(); // разворачиваем до максимума BottomSheet
+    }
 
     if (themeParams.mountSync.isAvailable()) {
       themeParams.mountSync();

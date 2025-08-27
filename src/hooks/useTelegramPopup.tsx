@@ -16,6 +16,7 @@ interface PopupOptions {
 
 /**
  * Хук для открытия Telegram popup
+ * Кнопки типа { id: string; type: "default" | "ok" | "close" | "destructive"; text: string;}
  */
 export function useTelegramPopup() {
   const openPopup = async ({ title, message, buttons }: PopupOptions) => {

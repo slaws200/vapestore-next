@@ -2,15 +2,17 @@
 
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { addProduct, updateProduct } from "@/lib/products";
 import { uploadProductImage } from "@/lib/uploadImage";
 import { Product } from "@/types/product";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
+import { useAddProduct, useUpdateProduct } from "@/hooks/useProducts";
+import { useTelegramPopup } from "@/hooks/useTelegramPopup";
+import { redirect, RedirectType } from "next/navigation";
 
 type ProductFormProps = {
   product?: Product;
   categoryId: string;
-  onSuccess?: (product: Product) => void;
+  onSuccess?: () => void;
 };
 
 type FormValues = {
@@ -19,7 +21,7 @@ type FormValues = {
   description?: string;
   stock?: number;
   available: boolean;
-  image?: FileList; // теперь это файл
+  image?: FileList;
   category_id: string;
 };
 
@@ -43,36 +45,75 @@ export default function EditForm({
     },
   });
 
-  const id = product?.id || randomUUID;
+  const id = product?.id ?? String(uuidv4());
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const { openPopup } = useTelegramPopup();
+
+  const addMutation = useAddProduct(categoryId);
+  const updateMutation = useUpdateProduct(categoryId);
 
   const onSubmit = async (values: FormValues) => {
     try {
       let imageUrl = product?.image;
 
-      // если новый файл загружен
       if (values.image && values.image.length > 0) {
         const file = values.image[0];
-        imageUrl = await uploadProductImage(file, id as string);
+        imageUrl = await uploadProductImage(file, id);
       }
 
-      let saved: Product;
+      const payload = { ...values, image: imageUrl || "" };
+
       if (product) {
-        saved = await updateProduct(product.id, {
-          ...values,
-          image: imageUrl,
-        });
+        updateMutation.mutate(
+          { id: product.id, product: payload },
+          {
+            onSuccess: async () => {
+              const res = await openPopup({
+                title: "Успех",
+                message: "Товар успешно обновлен!",
+                buttons: [{ id: "ok", type: "close", text: "Закрыть" }],
+              });
+              if (res === "ok") {
+                onSuccess?.();
+                redirect(`/${product.id}`, RedirectType.replace);
+              }
+            },
+            onError: (e) => {
+              openPopup({
+                title: "Ошибка",
+                message: "Ошибка при обновлении",
+                buttons: [
+                  { id: "error", type: "destructive", text: "Закрыть" },
+                ],
+              });
+              setErrorMessage(e.message);
+            },
+          }
+        );
       } else {
-        saved = await addProduct({
-          ...values,
-          image: imageUrl || "",
+        addMutation.mutate(payload, {
+          onSuccess: () => {
+            openPopup({
+              title: "Успех",
+              message: "Товар успешно добавлен!",
+              buttons: [{ id: "ok", type: "close", text: "Закрыть" }],
+            });
+            onSuccess?.();
+          },
+          onError: (e) => {
+            openPopup({
+              title: "Ошибка",
+              message: "Ошибка при добавлении товара",
+              buttons: [{ id: "error", type: "destructive", text: "Закрыть" }],
+            });
+            setErrorMessage(e.message);
+          },
         });
       }
-
-      if (onSuccess) onSuccess(saved);
-    } catch (e: any) {
-      setErrorMessage(e.message);
+    } catch (e) {
+      setErrorMessage((e as Error).message);
     }
   };
 
@@ -87,6 +128,7 @@ export default function EditForm({
           {...register("name", { required: "Обязательное поле" })}
           className="border p-2 w-full"
         />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
       </label>
 
       <label>
@@ -99,6 +141,7 @@ export default function EditForm({
           })}
           className="border p-2 w-full"
         />
+        {errors.price && <p className="text-red-500">{errors.price.message}</p>}
       </label>
 
       <label>
@@ -143,7 +186,9 @@ export default function EditForm({
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={
+          isSubmitting || addMutation.isPending || updateMutation.isPending
+        }
         className="bg-blue-600 text-white py-2 rounded"
       >
         {product ? "Сохранить изменения" : "Добавить продукт"}

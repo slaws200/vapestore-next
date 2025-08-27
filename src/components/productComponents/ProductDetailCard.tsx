@@ -6,6 +6,7 @@ import { useTelegram } from "@/hooks/useTelegram";
 import { ProductImage } from "@/components/productComponents/ProductImage";
 import { ProductInfo } from "@/components/productComponents/ProductInfo";
 import EditForm from "../EditForm";
+import { adminsIds } from "@/utils/constants";
 
 interface ProductDetailCardProps {
   product: Product;
@@ -17,12 +18,20 @@ export default function ProductDetailCard({ product }: ProductDetailCardProps) {
 
   return (
     <div className="max-h-[100vh] overflow-y-auto scrollbar-hide">
-      <button
-        className="w-10 h-10 bg-gray-900"
-        onClick={() => setIsEdit(!isEdit)}
-      ></button>
+      {userData && adminsIds.includes(userData?.id) ? (
+        <button
+          className="p-2 bg-gray-500 rounded-lg"
+          onClick={() => setIsEdit(!isEdit)}
+        >
+          {isEdit ? "Выйти из редактирования" : "Режим редактирования"}
+        </button>
+      ) : null}
       {isEdit ? (
-        <EditForm categoryId={product.category_id} />
+        <EditForm
+          categoryId={product.category_id}
+          product={product}
+          onSuccess={() => setIsEdit(false)}
+        />
       ) : (
         <div className="max-w-4xl mx-auto p-4">
           <div className="rounded-lg p-6 mb-6">

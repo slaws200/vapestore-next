@@ -27,9 +27,6 @@ export async function fetchProductById(id: string): Promise<Product | null> {
 export async function fetchProductsByCategoryId(
   categoryId: string | "all"
 ): Promise<Product[]> {
-  // if (categoryName === "all") {
-  //   return fetchAllProducts();
-  // }
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -61,16 +58,3 @@ export async function updateProduct(id: string, product: Partial<Product>) {
   if (error) throw error;
   return data as Product;
 }
-
-// // Добавить продукт
-// export async function createProduct(product: Partial<Product>) {
-//   const { data, error } = await supabase.from("products").insert(product);
-//   if (error) throw error;
-//   return data;
-// }
-
-// // Удалить
-// export async function deleteProduct(id: string) {
-//   const { error } = await supabase.from("products").delete().eq("id", id);
-//   if (error) throw error;
-// }

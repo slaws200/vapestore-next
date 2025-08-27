@@ -1,14 +1,15 @@
 "use client";
 
 import CategoryTabs from "@/components/CategoryTabs";
-import { fetchAllProducts, fetchProductsByCategoryId } from "@/lib/products";
+import { fetchAllProducts } from "@/lib/products";
 import { Product } from "@/types/product";
-import { useQuery } from "@tanstack/react-query";
+import { useProductsByCategory } from "@/hooks/useProducts"; // 👈 импорт хуков
 import Link from "next/link";
 import { ReactEventHandler, useEffect, useRef, useState } from "react";
-import { Category } from "../../types/category";
+import { Category } from "@/types/category";
 import Loader from "../loader";
 import ProductCard from "./ProductCard";
+import { useCategoryStore } from "@/lib/store/categoryStore";
 
 type CategoryId = string | "all";
 
@@ -23,24 +24,19 @@ export default function ProductListWithCategories({
   startOffset = [0, 11],
   preloadedCategories = [],
 }: IProductListProps) {
-  const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
+  const { activeCategory, setActiveCategory } = useCategoryStore();
   const [products, setProducts] = useState<Product[]>(preloadedData);
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(startOffset);
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // TanStack Query for category-specific products
+  // ✅ Теперь используем кастомный хук
   const {
     data: categoryProducts,
     isLoading: isLoadingCategory,
     error: categoryError,
-  } = useQuery({
-    queryKey: ["products", "category", activeCategory],
-    queryFn: () => fetchProductsByCategoryId(activeCategory),
-    enabled: activeCategory !== "all",
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  } = useProductsByCategory(activeCategory);
 
   const loadProducts = async (category: CategoryId, reset = false) => {
     setLoading(true);
@@ -59,15 +55,12 @@ export default function ProductListWithCategories({
     }
   };
 
-  // Update products when category changes or when category data is available
   useEffect(() => {
     if (activeCategory === "all") {
-      // Keep existing logic for "all" category
       if (offset[0] === 0 && !preloadedData.length) {
         loadProducts(activeCategory, true);
       }
     } else {
-      // Use TanStack Query data for specific categories
       if (categoryProducts) {
         setProducts(categoryProducts);
         setHasMore(false);
@@ -79,16 +72,14 @@ export default function ProductListWithCategories({
     setActiveCategory(category);
     setHasMore(true);
     setOffset([0, 11]);
-    setHasMore(true);
     if (category === "all") {
-      loadProducts(category, true); // reset = true
+      loadProducts(category, true);
     }
   };
 
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current ?? e.currentTarget;
-    console.log(scrollTop, scrollHeight, clientHeight);
     if (!loading && hasMore && activeCategory === "all") {
       if (scrollTop + clientHeight > scrollHeight - 21) {
         setOffset((prev) => [prev[0] + 12, prev[1] + 12]);
@@ -119,12 +110,10 @@ export default function ProductListWithCategories({
     }
   }, [loading]);
 
-  // Show loading state for category-specific queries
   if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
     return <Loader />;
   }
 
-  // Show error state for category-specific queries
   if (activeCategory !== "all" && categoryError) {
     return (
       <div className="col-span-full flex justify-center items-center py-12">
