@@ -16,7 +16,9 @@ export function ProductImage({ product, className = "" }: ProductImageProps) {
           product.image.startsWith("http") ? product.image : `/${product.image}`
         }
         alt={product.name}
-        className="object-contain"
+        className={`object-contain ${
+          !product.available ? "grayscale-100" : ""
+        }`}
         fill
         loading="lazy"
         placeholder="blur"

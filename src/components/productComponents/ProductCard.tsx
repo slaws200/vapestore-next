@@ -6,7 +6,7 @@ import NotFound from "../../app/not-found";
 export default function ProductCard({ product }: { product: Product }) {
   if (!product) return <NotFound />;
   return (
-    <div className="h-full flex flex-col justify-between ">
+    <div className={`h-full flex flex-col justify-between`}>
       <div className="relative aspect-square bg-gray-100 rounded-md mb-1">
         <Image
           src={
@@ -17,7 +17,9 @@ export default function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw"
-          className="object-contain"
+          className={`${
+            !product.available ? "grayscale-100" : ""
+          } object-contain`}
         />
       </div>
       <div className="flex flex-col h-full justify-between">
@@ -25,7 +27,13 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.name}
         </h2>
         <div>
-          <p className="text-blue-600 font-bold text-xs">₽{product.price}</p>
+          <p
+            className={`text-blue-600 font-bold text-xs ${
+              !product.available ? "grayscale-100" : ""
+            }`}
+          >
+            ₽{product.price}
+          </p>
           <span
             className={`text-xs font-medium ${
               product.available ? "text-green-600" : "text-red-600"

@@ -20,7 +20,13 @@ export function ProductInfo({ product, userData }: ProductInfoProps) {
       </span>
 
       <div className="flex justify-between items-center mb-6">
-        <p className="text-xl font-bold text-blue-600">Цена ₽{product.price}</p>
+        <p
+          className={`text-xl font-bold text-blue-600 ${
+            !product.available ? "grayscale-100" : ""
+          }`}
+        >
+          Цена ₽{product.price}
+        </p>
         <OrderButton product={product} userData={userData} />
       </div>
 
