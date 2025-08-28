@@ -15,12 +15,12 @@ export async function fetchAllProducts(
 
 // Получить продукт по ID
 export async function fetchProductById(id: string): Promise<Product | null> {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("products")
     .select("*")
     .eq("id", id)
     .single();
-  if (error) throw error;
+
   return data;
 }
 // Получить продукты по ID категории
@@ -57,4 +57,11 @@ export async function updateProduct(id: string, product: Partial<Product>) {
 
   if (error) throw error;
   return data as Product;
+}
+
+export async function deleteProduct(id: string) {
+  const { data, error } = await supabase.from("products").delete().eq("id", id);
+
+  if (error) throw error;
+  return data;
 }

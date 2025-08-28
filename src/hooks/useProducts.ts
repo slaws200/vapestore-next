@@ -2,6 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addProduct,
+  deleteProduct,
   fetchProductsByCategoryId,
   updateProduct,
 } from "@/lib/products";
@@ -104,6 +105,50 @@ export function useUpdateProduct(categoryId: string | "all") {
       queryClient.invalidateQueries({
         queryKey: ["products", "category", categoryId],
       });
+    },
+  });
+}
+export function useDeleteProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    // теперь в мутацию передаём целый продукт
+    mutationFn: (product: Product) => deleteProduct(product.id),
+
+    onMutate: async (product) => {
+      await queryClient.cancelQueries({
+        queryKey: ["products", "category", product.category_id],
+      });
+
+      const prevProducts = queryClient.getQueryData<Product[]>([
+        "products",
+        "category",
+        product.category_id,
+      ]);
+
+      queryClient.setQueryData<Product[]>(
+        ["products", "category", product.category_id],
+        (old = []) => old.filter((p) => p.id !== product.id)
+      );
+
+      return { prevProducts, categoryId: product.category_id };
+    },
+
+    onError: (err, product, context) => {
+      if (context?.prevProducts) {
+        queryClient.setQueryData(
+          ["products", "category", context.categoryId],
+          context.prevProducts
+        );
+      }
+    },
+
+    onSettled: (product, _err, _variables, context) => {
+      if (context?.categoryId) {
+        queryClient.invalidateQueries({
+          queryKey: ["products", "category", context.categoryId],
+        });
+      }
     },
   });
 }
