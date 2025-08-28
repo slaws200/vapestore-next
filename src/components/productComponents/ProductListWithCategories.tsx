@@ -1,15 +1,15 @@
 "use client";
 
 import CategoryTabs from "@/components/CategoryTabs";
-import { fetchAllProducts } from "@/lib/products";
-import { Product } from "@/types/product";
 import { useProductsByCategory } from "@/hooks/useProducts"; // 👈 импорт хуков
+import { fetchAllProducts } from "@/lib/products";
+import { useCategoryStore } from "@/lib/store/categoryStore";
+import { Category } from "@/types/category";
+import { Product } from "@/types/product";
 import Link from "next/link";
 import { ReactEventHandler, useEffect, useRef, useState } from "react";
-import { Category } from "@/types/category";
 import Loader from "../loader";
 import ProductCard from "./ProductCard";
-import { useCategoryStore } from "@/lib/store/categoryStore";
 
 type CategoryId = string | "all";
 
@@ -142,7 +142,7 @@ export default function ProductListWithCategories({
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="max-h-[100vh] overflow-y-auto scrollbar-hide py-12"
+      className="max-h-[100vh] overflow-y-auto scrollbar-hide py-12 pb-20"
     >
       <CategoryTabs
         onCategorySelect={handleCategorySelect}
@@ -163,7 +163,7 @@ export default function ProductListWithCategories({
 
       {loading && <Loader />}
       {!hasMore && activeCategory === "all" && (
-        <p className="text-center text-gray-300 text-xs p-2">
+        <p className="text-center text-gray-300 text-xs pt-3">
           Больше товаров нет
         </p>
       )}

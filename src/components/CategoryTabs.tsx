@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Category } from "../types/category";
+import { categoryNamesRu } from "../utils/constants";
 
 interface CategoryTabsProps {
   onCategorySelect: (category: string) => void;
@@ -9,16 +10,6 @@ interface CategoryTabsProps {
   className?: string;
   preloadedCategories: Category[];
 }
-
-// Category display names mapping
-const categoryDisplayNames = {
-  all: "Все товары",
-  cartriges: "Картриджи",
-  pods: "Под-системы",
-  chaser: "Chaser",
-  octobar: "Octobar",
-  fl: "FL",
-};
 
 export default function CategoryTabs({
   onCategorySelect,
@@ -104,8 +95,8 @@ export default function CategoryTabs({
                     }
                   `}
                 >
-                  {categoryDisplayNames[
-                    category.name as keyof typeof categoryDisplayNames
+                  {categoryNamesRu[
+                    category.name as keyof typeof categoryNamesRu
                   ] || category.name}
                   {/* {hasProducts && (
                     <span

@@ -23,7 +23,6 @@ export default function TelegramInit() {
       themeParams.mountSync();
     }
 
-    // Пример — выключаем свайпы
     postEvent("web_app_setup_swipe_behavior", {
       allow_vertical_swipe: false,
     });

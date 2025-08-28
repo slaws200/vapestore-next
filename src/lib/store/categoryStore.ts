@@ -1,4 +1,3 @@
-// store/categoryStore.ts
 import { create } from "zustand";
 
 type CategoryStore = {

@@ -120,13 +120,13 @@ export default function EditForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 p-4 border rounded-lg text-gray-900"
+      className="flex flex-col gap-4 p-3 rounded-lg text-gray-900 text-xs"
     >
       <label>
         Название
         <input
           {...register("name", { required: "Обязательное поле" })}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-2 w-full bg-white rounded-sm"
         />
         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
       </label>
@@ -139,14 +139,17 @@ export default function EditForm({
             required: "Укажите цену",
             valueAsNumber: true,
           })}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-2 w-full bg-white rounded-sm"
         />
         {errors.price && <p className="text-red-500">{errors.price.message}</p>}
       </label>
 
       <label>
         Описание
-        <textarea {...register("description")} className="border p-2 w-full" />
+        <textarea
+          {...register("description")}
+          className="border border-gray-300 p-2 w-full min-h-30 bg-white rounded-sm"
+        />
       </label>
 
       <label>
@@ -154,13 +157,20 @@ export default function EditForm({
         <input
           type="number"
           {...register("stock", { valueAsNumber: true })}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-2 w-full bg-white rounded-sm"
         />
       </label>
 
-      <label className="flex items-center gap-2">
-        <input type="checkbox" {...register("available")} />
-        Доступен
+      <label className="flex items-center gap-2 cursor-pointer select-none group">
+        <input type="checkbox" {...register("available")} className="sr-only" />
+        <div className="w-11 h-6 bg-gray-300 rounded-full relative transition-colors duration-300 ease-in-out group-has-[:checked]:bg-blue-500">
+          <div
+            className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md
+                 transition-transform duration-300 ease-in-out
+                 group-has-[:checked]:translate-x-5"
+          />
+        </div>
+        <span className="text-gray-900">В наличии / Не в наличии</span>
       </label>
 
       <label>
@@ -169,7 +179,7 @@ export default function EditForm({
           type="file"
           accept="image/*"
           {...register("image")}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-2 w-full bg-white rounded-sm"
         />
         {product?.image && (
           <div className="mt-2">

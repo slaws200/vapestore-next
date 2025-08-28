@@ -38,7 +38,6 @@ export function OrderButton({
 
       if (confirmResult !== "ok") {
         impact("heavy");
-        console.log("Пользователь отменил ❌");
         return;
       }
 
@@ -71,7 +70,7 @@ export function OrderButton({
   ) : (
     <button
       onClick={handleOrder}
-      className={`bg-sky-400 hover:bg-sky-500 disabled:bg-gray-400 text-white text-lg rounded-md h-7 w-21 transition-colors duration-200 ${className}`}
+      className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 ${className}`}
     >
       {"Заказать"}
     </button>
