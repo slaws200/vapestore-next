@@ -8,7 +8,7 @@ type PageProps = {
 export default async function CreateProductByCategoryPage({
   params,
 }: PageProps) {
-  const { categoryId } = await params;
+  const { categoryId } = params;
   return (
     <div>
       <Link href="/" className="text-blue-600">
