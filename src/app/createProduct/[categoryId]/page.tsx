@@ -1,12 +1,8 @@
 import Link from "next/link";
 import EditForm from "../../../components/EditForm";
 
-export default function CreateProductByCategoryPage({
-  params,
-}: {
-  params: { categoryId: string };
-}) {
-  const { categoryId } = params;
+export default function CreateProductByCategoryPage(props: unknown) {
+  const { categoryId } = (props as { params: { categoryId: string } }).params;
   return (
     <div>
       <Link href="/" className="text-blue-600">
