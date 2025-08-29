@@ -7,7 +7,7 @@ import Select from "../../components/ui/Select";
 import { fetchAllCategories } from "../../lib/categories";
 import { useState, useEffect } from "react";
 import { Category } from "../../types/category";
-import { categoryNamesRu } from "../../utils/constants";
+import { adminsIds, categoryNamesRu } from "../../utils/constants";
 
 export default function ProfilePage() {
   const { userData } = useTelegram();
@@ -54,17 +54,19 @@ export default function ProfilePage() {
       </div>
 
       {/* Категории */}
-      <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
-        <div className="flex flex-col items-center text-lg w-full rounded-xl bg-white">
-          <span className="w-full flex justify-between items-center font-medium text-gray-900 p-4">
-            Добавить товар в категорию:
-          </span>
-          <Select
-            placeholder="Выбери категорию..."
-            options={generateOptions(categories)}
-          />
+      {adminsIds.includes(userData.id) && (
+        <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
+          <div className="flex flex-col items-center text-lg w-full rounded-xl bg-white">
+            <span className="w-full flex justify-between items-center font-medium text-gray-900 p-4">
+              Добавить товар в категорию:
+            </span>
+            <Select
+              placeholder="Выбери категорию..."
+              options={generateOptions(categories)}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Accordion */}
       <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
