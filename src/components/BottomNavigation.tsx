@@ -35,7 +35,10 @@ export default function BottomNavigation() {
             <Link
               key={tab.path}
               href={tab.path}
-              className={getTabClasses(isActive, tab.color)}
+              className={`${getTabClasses(
+                isActive,
+                tab.color
+              )} flex justify-center`}
             >
               {tab.label}
             </Link>

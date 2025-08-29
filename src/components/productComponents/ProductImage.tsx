@@ -22,7 +22,7 @@ export function ProductImage({ product, className = "" }: ProductImageProps) {
         fill
         loading="lazy"
         placeholder="blur"
-        blurDataURL={product.image}
+        blurDataURL={product.image || "img/xros4.webp"}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
     </div>
