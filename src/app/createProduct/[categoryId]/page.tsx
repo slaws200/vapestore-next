@@ -1,13 +1,11 @@
 import Link from "next/link";
 import EditForm from "../../../components/EditForm";
 
-type PageProps = {
-  params: { categoryId: string };
-};
-
-export default async function CreateProductByCategoryPage({
+export default function CreateProductByCategoryPage({
   params,
-}: PageProps) {
+}: {
+  params: { categoryId: string };
+}) {
   const { categoryId } = params;
   return (
     <div>
