@@ -1,9 +1,12 @@
 "use client";
 
+import { useTelegram } from "@/hooks/useTelegram";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function BottomNavigation() {
+  const { launchParams } = useTelegram();
+  const platform = launchParams?.tgWebAppPlatform;
   const pathname = usePathname();
   const isProductCard =
     pathname === "/" || pathname === "/profile" ? true : false;
@@ -28,7 +31,13 @@ export default function BottomNavigation() {
 
   return (
     isProductCard && (
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t px-2 py-2 pb-8 flex gap-2 font-medium text-sm">
+      <div
+        className={`fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t px-2 py-2 ${
+          !platform || platform === "web" || platform === "tdesktop"
+            ? "pb-2"
+            : "pb-8"
+        } flex gap-2 font-medium text-sm`}
+      >
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;
           return (

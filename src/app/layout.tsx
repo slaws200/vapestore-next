@@ -3,8 +3,8 @@ import ReactQueryProvider from "@/lib/queryClient/ReactQueryProvider";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import BottomNavigation from "../components/BottomNavigation"; // app/layout.tsx или компонент TelegramProvider
 import "./globals.css";
-import BottomNavigation from "../components/BottomNavigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +27,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-y-hidden scrollbar-hide">
+    <html lang="en" className="scrollbar-hide">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-100 m-auto overflow-y-hidden scrollbar-hide py-5 `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-100 m-auto h-screen py-5 scrollbar-hide`}
       >
         <TelegramInit />
         <ReactQueryProvider>

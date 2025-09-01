@@ -32,12 +32,12 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex flex-col gap-4 overflow-auto min-h-screen">
+    <div className="flex flex-col gap-4 min-h-screen pb-20 bg-scroll overflow-y-auto">
       {/* Блок с профилем */}
       <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
         <Image
           className="rounded-full relative top-7 border-2 border-gray-300"
-          src={userData.photo_url!}
+          src={userData?.photo_url ?? ""}
           alt="user"
           width={60}
           height={60}
@@ -53,7 +53,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Категории */}
+      {/* Добавление новых товаров */}
       {adminsIds.includes(userData.id) && (
         <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
           <div className="flex flex-col items-center text-lg w-full rounded-xl bg-white">

@@ -57,7 +57,7 @@ export default function Select({
       </button>
 
       {isOpen && (
-        <ul className="absolute z-10 mt-1 w-full bg-white rounded-lg shadow-lg overflow-y-auto">
+        <ul className="absolute left-0 z-10 mt-1 w-full bg-white rounded-lg shadow-lg overflow-y-auto divide-y divide-gray-100">
           {options.map((option) => (
             <li
               key={option.value}

@@ -2,6 +2,7 @@ import { backButton, initData, isTMA, User } from "@telegram-apps/sdk-react";
 import { redirect, RedirectType } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHapticFeedback } from "./useHapticFeedback";
+import { LaunchParams, retrieveLaunchParams } from "@telegram-apps/sdk";
 
 /**
  * Хук для получения пользовательских данных и isInTMA признака
@@ -9,6 +10,9 @@ import { useHapticFeedback } from "./useHapticFeedback";
 
 export function useTelegram() {
   const [userData, setUserData] = useState<User | undefined>(undefined);
+  const [launchParams, setLaunchParams] = useState<LaunchParams | undefined>(
+    undefined
+  );
   const { impact } = useHapticFeedback();
 
   useEffect(() => {
@@ -17,6 +21,7 @@ export function useTelegram() {
     // Инициализация данных пользователя
     initData.restore();
     setUserData(initData.user());
+    setLaunchParams(retrieveLaunchParams());
 
     // Обработчик кнопки "Назад"
     const handleBackClick = () => {
@@ -38,5 +43,6 @@ export function useTelegram() {
   return {
     userData,
     isInTMA: isTMA(),
+    launchParams,
   };
 }
