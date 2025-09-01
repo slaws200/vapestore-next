@@ -48,7 +48,6 @@ export default function CategoryTabs({
             <button
               key={"all"}
               onClick={() => onCategorySelect("all")}
-              // disabled={!hasProducts}
               className={`
                     px-4 py-1 rounded-lg font-medium text-sm whitespace-nowrap
                     transition-all duration-200 flex-shrink-0
@@ -60,54 +59,27 @@ export default function CategoryTabs({
                   `}
             >
               {"Все товары"}
-              {/* {hasProducts && (
-                    <span
-                      className={`
-                      ml-2 px-2 py-0.5 rounded-full text-xs
-                      ${isActive ? "bg-blue-500" : "bg-gray-200"}
-                    `}
-                    >
-                      {products.length}
-                    </span>
-                  )} */}
             </button>
             {preloadedCategories.map((category) => {
               const isActive = activeCategory === category.id;
-              // const products = getProductsByCategory(
-              //   category as keyof Database
-              // );
-              // const hasProducts = products.length > 0;
 
               return (
                 <button
                   key={category.id}
                   onClick={() => onCategorySelect(category.id)}
-                  // disabled={!hasProducts}
                   className={`
                     px-2 py-2 rounded-lg font-medium text-sm whitespace-nowrap
                     transition-all duration-200 flex-shrink-0
                     ${
                       isActive
                         ? "bg-blue-600 text-white shadow-md"
-                        : // : hasProducts
-                          "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      // : "bg-gray-50 text-gray-400 cursor-not-allowed"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }
                   `}
                 >
                   {categoryNamesRu[
                     category.name as keyof typeof categoryNamesRu
                   ] || category.name}
-                  {/* {hasProducts && (
-                    <span
-                      className={`
-                      ml-2 px-2 py-0.5 rounded-full text-xs
-                      ${isActive ? "bg-blue-500" : "bg-gray-200"}
-                    `}
-                    >
-                      {products.length}
-                    </span>
-                  )} */}
                 </button>
               );
             })}

@@ -1,5 +1,5 @@
 import { backButton, initData, isTMA, User } from "@telegram-apps/sdk-react";
-import { redirect, RedirectType } from "next/navigation";
+import { redirect, RedirectType, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHapticFeedback } from "./useHapticFeedback";
 import { LaunchParams, retrieveLaunchParams } from "@telegram-apps/sdk";
@@ -13,6 +13,8 @@ export function useTelegram() {
   const [launchParams, setLaunchParams] = useState<LaunchParams | undefined>(
     undefined
   );
+
+  const pathname = usePathname();
   const { impact } = useHapticFeedback();
 
   useEffect(() => {
@@ -30,8 +32,10 @@ export function useTelegram() {
     };
 
     // Настройка кнопки "Назад"
-    backButton.show();
-    backButton.onClick(handleBackClick);
+    if (pathname !== "/") {
+      backButton.show();
+      backButton.onClick(handleBackClick);
+    }
 
     // Очистка при размонтировании
     return () => {

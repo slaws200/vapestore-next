@@ -7,4 +7,5 @@ export const categoryNamesRu: Record<string, string> = {
   octobar: "Octobar",
   fl: "Flavorlab",
   cartriges: "Картриджи",
+  elfliq: "ElfLiq",
 };
