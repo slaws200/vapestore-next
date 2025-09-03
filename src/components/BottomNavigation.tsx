@@ -9,18 +9,20 @@ export default function BottomNavigation() {
   const platform = launchParams?.tgWebAppPlatform;
   const pathname = usePathname();
   const isProductCard =
-    pathname === "/" || pathname === "/profile" ? true : false;
+    pathname === "/" || pathname === "/profile" || pathname === "/categories"
+      ? true
+      : false;
 
   const tabs = [
     { path: "/", label: "Главная", color: "blue" },
-    // { path: "/categories", label: "Категории", color: "green" },
+    { path: "/categories", label: "Категории", color: "green" },
     { path: "/profile", label: "Профиль", color: "red" },
   ];
 
   const getTabClasses = (isActive: boolean, color: string) => {
     const colorMap: Record<string, string> = {
       blue: "bg-blue-600 text-white shadow-md",
-      green: "bg-green-600 text-white shadow-md",
+      green: "bg-blue-600 text-white shadow-md",
       red: "bg-blue-600 text-white shadow-md",
     };
 
