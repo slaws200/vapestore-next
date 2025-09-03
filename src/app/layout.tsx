@@ -1,7 +1,7 @@
 import TelegramInit from "@/components/TelegramInit";
 import ReactQueryProvider from "@/lib/queryClient/ReactQueryProvider";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import BottomNavigation from "../components/BottomNavigation"; // app/layout.tsx или компонент TelegramProvider
 import "./globals.css";
@@ -15,6 +15,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Vapestore Liquid Lounge",

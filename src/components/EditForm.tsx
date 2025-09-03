@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useAddProduct, useUpdateProduct } from "@/hooks/useProducts";
 import { useTelegramPopup } from "@/hooks/useTelegramPopup";
 import { redirect, RedirectType } from "next/navigation";
+import { viewport } from "@/app/layout";
 
 type ProductFormProps = {
   product?: Product;

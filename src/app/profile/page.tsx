@@ -8,10 +8,14 @@ import { fetchAllCategories } from "../../lib/categories";
 import { useState, useEffect } from "react";
 import { Category } from "../../types/category";
 import { adminsIds, categoryNamesRu } from "../../utils/constants";
+import { useBackButton } from "@/hooks/useBackButton";
+import { redirect, RedirectType } from "next/navigation";
+import { openTelegramLink } from "@telegram-apps/sdk-react";
 
 export default function ProfilePage() {
   const { userData } = useTelegram();
   const [categories, setCategories] = useState<Category[] | undefined>();
+  useBackButton(() => redirect("/", RedirectType.replace));
 
   useEffect(() => {
     fetchAllCategories()
@@ -80,12 +84,14 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center text-lg text-left w-full min-h-10 rounded-xl bg-white p-4">
           <span className="w-full flex justify-between items-center font-medium text-gray-900">
             Связаться с админом:
-            <a
+            <button
+              onClick={() =>
+                openTelegramLink.ifAvailable("https://t.me/Liquid_Lounge")
+              }
               className="text-sm text-blue-600"
-              href="https://t.me/Liquid_Lounge"
             >
               Открыть
-            </a>
+            </button>
           </span>
         </div>
       </div>

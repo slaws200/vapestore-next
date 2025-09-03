@@ -3,6 +3,8 @@ import React from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import { useTelegramPopup } from "../../hooks/useTelegramPopup";
 import { openTelegramLink } from "@telegram-apps/sdk-react";
+import { useBackButton } from "@/hooks/useBackButton";
+import { redirect, RedirectType } from "next/navigation";
 
 async function copyText(text: string) {
   if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
@@ -34,6 +36,7 @@ async function copyText(text: string) {
 export default function CheckoutPage() {
   const { userData } = useTelegram();
   const { openPopup } = useTelegramPopup();
+  useBackButton(() => redirect("/", RedirectType.replace));
 
   const handleCopy = async () => {
     if (!userData?.id) return;

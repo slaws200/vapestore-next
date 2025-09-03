@@ -11,6 +11,7 @@ import { useTelegramPopup } from "../../hooks/useTelegramPopup";
 import { useDeleteProduct } from "../../hooks/useProducts";
 import { useHapticFeedback } from "../../hooks/useHapticFeedback";
 import { redirect, RedirectType } from "next/navigation";
+import { useBackButton } from "@/hooks/useBackButton";
 
 interface ProductDetailCardProps {
   product: Product;
@@ -22,9 +23,10 @@ export default function ProductDetailCard({ product }: ProductDetailCardProps) {
   const { impact } = useHapticFeedback();
   const deleteMutation = useDeleteProduct();
   const [isEdit, setIsEdit] = useState(false);
+  useBackButton(() => redirect("/", RedirectType.replace));
 
   return (
-    <div className="max-h-[100vh] overflow-y-auto scrollbar-hide">
+    <div>
       {userData && adminsIds.includes(userData?.id) ? (
         <div className="flex justify-center" role="group">
           <button
