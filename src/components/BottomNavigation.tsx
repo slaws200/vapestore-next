@@ -1,12 +1,14 @@
 "use client";
 
 import { useTelegram } from "@/hooks/useTelegram";
+import { useGlobalLoaderStore } from "@/lib/store/globalLoaderStore";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function BottomNavigation() {
   const { launchParams } = useTelegram();
   const platform = launchParams?.tgWebAppPlatform;
+  const { setIsLoading } = useGlobalLoaderStore();
   const pathname = usePathname();
   const isProductCard =
     pathname === "/" || pathname === "/profile" || pathname === "/categories"
@@ -15,15 +17,15 @@ export default function BottomNavigation() {
 
   const tabs = [
     { path: "/", label: "Главная", color: "blue" },
-    { path: "/categories", label: "Категории", color: "green" },
-    { path: "/profile", label: "Профиль", color: "red" },
+    { path: "/categories", label: "Категории", color: "blue" },
+    { path: "/profile", label: "Профиль", color: "blue" },
   ];
 
   const getTabClasses = (isActive: boolean, color: string) => {
     const colorMap: Record<string, string> = {
       blue: "bg-blue-600 text-white shadow-md",
-      green: "bg-blue-600 text-white shadow-md",
-      red: "bg-blue-600 text-white shadow-md",
+      green: "bg-green-600 text-white shadow-md",
+      red: "bg-red-600 text-white shadow-md",
     };
 
     return isActive
@@ -44,6 +46,7 @@ export default function BottomNavigation() {
           const isActive = pathname === tab.path;
           return (
             <Link
+              onClick={() => setIsLoading(true)}
               key={tab.path}
               href={tab.path}
               className={`${getTabClasses(
