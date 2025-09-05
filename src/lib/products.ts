@@ -8,6 +8,7 @@ export async function fetchAllProducts(
   const { data, error } = await supabase
     .from("products")
     .select("*")
+    .order("id_bigserial", { ascending: true })
     .range(from, to);
   if (error) throw error;
   return data || [];
@@ -30,6 +31,7 @@ export async function fetchProductsByCategoryId(
   const { data, error } = await supabase
     .from("products")
     .select("*")
+    .order("id_bigserial", { ascending: true })
     .eq("category_id", categoryId);
 
   if (error) throw error;

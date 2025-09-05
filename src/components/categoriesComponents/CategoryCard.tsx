@@ -8,7 +8,7 @@ export default function CategoryCard({ category }: { category: Category }) {
       <div className="relative aspect-square bg-gray-100 rounded-md">
         <Image
           src={
-            category.image.startsWith("http")
+            category.image && category.image.startsWith("http")
               ? category.image
               : `/${category.image}`
           }
@@ -20,7 +20,7 @@ export default function CategoryCard({ category }: { category: Category }) {
       </div>
       <div className="flex flex-col h-full justify-between">
         <h2 className="text-xs font-semibold text-gray-900">
-          {categoryNamesRu[category.name]}
+          {categoryNamesRu[category.name] || category.name}
         </h2>
       </div>
     </div>
