@@ -7,5 +7,5 @@ export type Product = {
   stock?: number;
   available: boolean;
   category_id: string;
-  id_bigserial: number;
+  id_bigserial?: number;
 };

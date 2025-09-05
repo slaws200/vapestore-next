@@ -24,7 +24,8 @@ export function useAddProduct(categoryId: string | "all") {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (product: Omit<Product, "id">) => addProduct(product),
+    mutationFn: (product: Omit<Product, "id" | "id_bigserial">) =>
+      addProduct(product),
     onMutate: async (newProduct) => {
       if (categoryId === "all") return; // оптимизм только для категорий
       await queryClient.cancelQueries({

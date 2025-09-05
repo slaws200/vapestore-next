@@ -38,7 +38,9 @@ export async function fetchProductsByCategoryId(
   return data || [];
 }
 
-export async function addProduct(product: Omit<Product, "id">) {
+export async function addProduct(
+  product: Omit<Product, "id" | "id_bigserial">
+) {
   const { data, error } = await supabase
     .from("products")
     .insert([product])
