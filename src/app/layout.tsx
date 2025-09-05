@@ -1,6 +1,7 @@
 import TelegramInit from "@/components/TelegramInit";
 import ReactQueryProvider from "@/lib/queryClient/ReactQueryProvider";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
+import { GlobalLoader } from "@/components/GlobalLoader";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import BottomNavigation from "../components/BottomNavigation"; // app/layout.tsx или компонент TelegramProvider
@@ -41,6 +42,7 @@ export default function RootLayout({
         <TelegramInit />
         <ReactQueryProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <GlobalLoader />
           {children}
           <BottomNavigation />
         </ReactQueryProvider>

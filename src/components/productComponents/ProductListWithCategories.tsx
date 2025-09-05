@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ReactEventHandler, useEffect, useRef, useState } from "react";
 import Loader from "../loader";
 import ProductCard from "./ProductCard";
+import { useGlobalLoaderStore } from "@/lib/store/globalLoaderStore";
 
 type CategoryId = string | "all";
 
@@ -25,6 +26,7 @@ export default function ProductListWithCategories({
   preloadedCategories = [],
 }: IProductListProps) {
   const { activeCategory, setActiveCategory } = useCategoryStore();
+  const { setIsLoading } = useGlobalLoaderStore();
   const [products, setProducts] = useState<Product[]>(preloadedData);
   const [loading, setLoading] = useState(false);
   const [offset, setOffset] = useState(startOffset);
@@ -72,9 +74,6 @@ export default function ProductListWithCategories({
     setActiveCategory(category);
     setHasMore(true);
     setOffset([0, 11]);
-    if (category === "all") {
-      loadProducts(category, true);
-    }
   };
 
   const handleScroll: ReactEventHandler<HTMLDivElement> = (e) => {
@@ -109,6 +108,10 @@ export default function ProductListWithCategories({
       });
     }
   }, [loading]);
+
+  useEffect(() => {
+    setIsLoading(isLoadingCategory);
+  }, [isLoadingCategory]);
 
   if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
     return <Loader />;
@@ -155,6 +158,7 @@ export default function ProductListWithCategories({
             key={product.id}
             href={`/${product.id}`}
             className="bg-white rounded-lg shadow-md p-2 flex flex-col hover:shadow-lg transition"
+            onClick={() => setIsLoading(true)}
           >
             <ProductCard product={product} />
           </Link>
