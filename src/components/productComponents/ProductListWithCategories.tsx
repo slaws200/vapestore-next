@@ -33,7 +33,6 @@ export default function ProductListWithCategories({
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Теперь используем кастомный хук
   const {
     data: categoryProducts,
     isLoading: isLoadingCategory,
@@ -112,6 +111,13 @@ export default function ProductListWithCategories({
   useEffect(() => {
     setIsLoading(isLoadingCategory);
   }, [isLoadingCategory]);
+  useEffect(() => {
+    try {
+      fetch("https://mybot-pmod.onrender.com/", { method: "GET" });
+    } catch (error) {
+      console.error("Ошибка при разбудке сервера:", error);
+    }
+  }, []);
 
   if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
     return <Loader />;
