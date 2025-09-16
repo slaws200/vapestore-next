@@ -1,27 +1,20 @@
 "use client";
 
+import { useBackButton } from "@/hooks/useBackButton";
+import { useAllCategoriesStore } from "@/lib/store/allCategories";
+import { openTelegramLink } from "@telegram-apps/sdk-react";
 import Image from "next/image";
-import { useTelegram } from "../../hooks/useTelegram";
+import { redirect, RedirectType } from "next/navigation";
 import Accordion from "../../components/ui/Accordion";
 import Select from "../../components/ui/Select";
-import { fetchAllCategories } from "../../lib/categories";
-import { useState, useEffect } from "react";
+import { useTelegram } from "../../hooks/useTelegram";
 import { Category } from "../../types/category";
 import { adminsIds, categoryNamesRu } from "../../utils/constants";
-import { useBackButton } from "@/hooks/useBackButton";
-import { redirect, RedirectType } from "next/navigation";
-import { openTelegramLink } from "@telegram-apps/sdk-react";
 
 export default function ProfilePage() {
   const { userData } = useTelegram();
-  const [categories, setCategories] = useState<Category[] | undefined>();
+  const { allCategories } = useAllCategoriesStore();
   useBackButton(() => redirect("/", RedirectType.replace));
-
-  useEffect(() => {
-    fetchAllCategories()
-      .then((data) => setCategories(data))
-      .catch(() => console.error("Ошибка при загрузке категорий"));
-  }, []);
 
   if (!userData) return <div>Нет данных</div>;
 
@@ -66,7 +59,7 @@ export default function ProfilePage() {
             </span>
             <Select
               placeholder="Выбери категорию..."
-              options={generateOptions(categories)}
+              options={generateOptions(allCategories)}
             />
           </div>
         </div>

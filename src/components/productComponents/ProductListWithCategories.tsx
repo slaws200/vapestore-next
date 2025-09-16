@@ -1,7 +1,7 @@
 "use client";
 
 import CategoryTabs from "@/components/CategoryTabs";
-import { useProductsByCategory } from "@/hooks/useProducts"; // 👈 импорт хуков
+import { useProductsByCategory } from "@/hooks/useProducts";
 import { fetchAllProducts } from "@/lib/products";
 import { useCategoryStore } from "@/lib/store/categoryStore";
 import { Category } from "@/types/category";
@@ -11,6 +11,7 @@ import { ReactEventHandler, useEffect, useRef, useState } from "react";
 import Loader from "../loader";
 import ProductCard from "./ProductCard";
 import { useGlobalLoaderStore } from "@/lib/store/globalLoaderStore";
+import { useAllCategoriesStore } from "@/lib/store/allCategories";
 
 type CategoryId = string | "all";
 
@@ -32,6 +33,7 @@ export default function ProductListWithCategories({
   const [offset, setOffset] = useState(startOffset);
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { setAllCategories } = useAllCategoriesStore();
 
   const {
     data: categoryProducts,
@@ -57,11 +59,7 @@ export default function ProductListWithCategories({
   };
 
   useEffect(() => {
-    if (activeCategory === "all") {
-      if (offset[0] === 0 && !preloadedData.length) {
-        loadProducts(activeCategory, true);
-      }
-    } else {
+    if (activeCategory !== "all") {
       if (categoryProducts) {
         setProducts(categoryProducts);
         setHasMore(false);
@@ -117,6 +115,10 @@ export default function ProductListWithCategories({
     } catch (error) {
       console.error("Ошибка при разбудке сервера:", error);
     }
+  }, []);
+
+  useEffect(() => {
+    setAllCategories(preloadedCategories);
   }, []);
 
   if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
