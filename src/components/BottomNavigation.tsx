@@ -46,7 +46,9 @@ export default function BottomNavigation() {
           const isActive = pathname === tab.path;
           return (
             <Link
-              onClick={() => setIsLoading(true)}
+              onClick={() => {
+                !isActive && setIsLoading(true);
+              }}
               key={tab.path}
               href={tab.path}
               className={`${getTabClasses(

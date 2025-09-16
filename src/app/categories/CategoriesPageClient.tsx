@@ -2,13 +2,21 @@
 
 import CategoryCard from "@/components/categoriesComponents/CategoryCard";
 import { useBackButton } from "@/hooks/useBackButton";
+import { fetchAllCategories } from "@/lib/categories";
 import { useAllCategoriesStore } from "@/lib/store/allCategories";
 import { Category } from "@/types/category";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CategoriesPageClient() {
   useBackButton(() => redirect("/"));
-  const { allCategories } = useAllCategoriesStore();
+  const { setAllCategories, allCategories } = useAllCategoriesStore();
+
+  useEffect(() => {
+    if (!allCategories.length) {
+      fetchAllCategories().then((res) => setAllCategories(res));
+    }
+  }, []);
 
   return (
     <div className="p-4 pt-0 px-10 pb-20">
