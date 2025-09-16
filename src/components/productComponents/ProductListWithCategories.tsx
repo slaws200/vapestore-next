@@ -109,6 +109,13 @@ export default function ProductListWithCategories({
   useEffect(() => {
     setIsLoading(isLoadingCategory);
   }, [isLoadingCategory]);
+  useEffect(() => {
+    try {
+      fetch("https://mybot-pmod.onrender.com/", { method: "GET" });
+    } catch (error) {
+      console.error("Ошибка при разбудке сервера:", error);
+    }
+  }, []);
 
   useEffect(() => {
     setAllCategories(preloadedCategories);

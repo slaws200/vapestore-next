@@ -1,4 +1,3 @@
-// import SearchInput from "@/components/SearchInput";
 import ProductListWithCategories from "@/components/productComponents/ProductListWithCategories";
 import { fetchAllCategories } from "@/lib/categories";
 import { fetchAllProducts } from "@/lib/products";
