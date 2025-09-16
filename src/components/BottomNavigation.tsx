@@ -17,7 +17,7 @@ export default function BottomNavigation() {
 
   const tabs = [
     { path: "/", label: "Главная", color: "blue" },
-    // { path: "/categories", label: "Категории", color: "blue" },
+    { path: "/categories", label: "Категории", color: "blue" },
     { path: "/profile", label: "Профиль", color: "blue" },
   ];
 
