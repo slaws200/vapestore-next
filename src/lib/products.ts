@@ -8,7 +8,8 @@ export async function fetchAllProducts(
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .order("id_bigserial", { ascending: true })
+    .order("available", { ascending: false }) // доступные первыми
+    .order("id_bigserial", { ascending: true }) // потом по id
     .range(from, to);
   if (error) throw error;
   return data || [];
@@ -31,8 +32,9 @@ export async function fetchProductsByCategoryId(
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .order("id_bigserial", { ascending: true })
-    .eq("category_id", categoryId);
+    .eq("category_id", categoryId)
+    .order("available", { ascending: false }) // доступные первыми
+    .order("id_bigserial", { ascending: true }); // потом по id
 
   if (error) throw error;
   return data || [];
