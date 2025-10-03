@@ -12,6 +12,8 @@ import Loader from "../loader";
 import ProductCard from "./ProductCard";
 import { useGlobalLoaderStore } from "@/lib/store/globalLoaderStore";
 import { useAllCategoriesStore } from "@/lib/store/allCategories";
+import { useTelegram } from "../../hooks/useTelegram";
+import { updateUserVisitDirect } from "../../lib/test";
 
 type CategoryId = string | "all";
 
@@ -34,6 +36,7 @@ export default function ProductListWithCategories({
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { setAllCategories } = useAllCategoriesStore();
+  const { userData } = useTelegram();
 
   const {
     data: categoryProducts,
@@ -118,6 +121,13 @@ export default function ProductListWithCategories({
   }, []);
 
   useEffect(() => {
+    if (userData) {
+      updateUserVisitDirect({
+        userId: `${userData?.id}`,
+        userName: userData?.username ?? "username not defined",
+        userFullName: `${userData.first_name} ${userData?.last_name}`,
+      });
+    }
     setAllCategories(preloadedCategories);
   }, []);
 
