@@ -36,7 +36,7 @@ export default function ProductListWithCategories({
   const [hasMore, setHasMore] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { setAllCategories } = useAllCategoriesStore();
-  const { userData } = useTelegram();
+  const { userData: user } = useTelegram();
 
   const {
     data: categoryProducts,
@@ -121,20 +121,31 @@ export default function ProductListWithCategories({
   }, []);
 
   useEffect(() => {
-    if (userData) {
-      try {
-        updateUserVisitDirect({
-          userId: `${userData?.id}`,
-          userName: userData?.username ?? "username not defined",
-          userFullName: `${userData?.first_name} ${userData?.last_name}`,
-        });
-      } catch {
-        console.error("Ошибка добавления записи в БД");
-      }
-    }
-
     setAllCategories(preloadedCategories);
   }, []);
+
+  useEffect(() => {
+    const alreadyExecuted = sessionStorage.getItem("alreadyExecuted");
+
+    if (user && !alreadyExecuted) {
+      const recordVisit = async () => {
+        const result = await updateUserVisitDirect({
+          userId: user.id + "",
+          userName: user.username || "username not defined",
+          userFullName: user.first_name + user.last_name || "",
+        });
+
+        if (result.success) {
+          console.log("Визит пользователя записан");
+        } else {
+          console.error("Ошибка записи визита:", result.error);
+        }
+      };
+
+      recordVisit();
+      sessionStorage.setItem("alreadyExecuted", "true");
+    }
+  }, [user]);
 
   if (activeCategory !== "all" && isLoadingCategory && products.length === 0) {
     return <Loader />;
