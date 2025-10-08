@@ -122,12 +122,17 @@ export default function ProductListWithCategories({
 
   useEffect(() => {
     if (userData) {
-      updateUserVisitDirect({
-        userId: `${userData?.id}`,
-        userName: userData?.username ?? "username not defined",
-        userFullName: `${userData.first_name} ${userData?.last_name}`,
-      });
+      try {
+        updateUserVisitDirect({
+          userId: `${userData?.id}`,
+          userName: userData?.username ?? "username not defined",
+          userFullName: `${userData?.first_name} ${userData?.last_name}`,
+        });
+      } catch {
+        console.error("Ошибка добавления записи в БД");
+      }
     }
+
     setAllCategories(preloadedCategories);
   }, []);
 

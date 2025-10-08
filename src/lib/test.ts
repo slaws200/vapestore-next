@@ -1,7 +1,7 @@
 /**
  * Обновляет информацию о визите пользователя
  * @param {Object} userData - Данные пользователя
- * @param {string} userData.userId - UUID пользователя
+ * @param {string} userData.userId - ID пользователя
  * @param {string} userData.userName - Имя пользователя
  * @param {string} userData.userFullName - Полное имя пользователя
  * @returns {Promise<Object>} Результат операции
@@ -22,7 +22,6 @@ interface userData {
 export async function updateUserVisitDirect(userData: userData) {
   try {
     const { userId, userName, userFullName } = userData;
-
     if (!userId) {
       throw new Error("userId является обязательным полем");
     }
@@ -31,7 +30,7 @@ export async function updateUserVisitDirect(userData: userData) {
     const { data: existingUser } = await supabase
       .from("users_activity")
       .select("visits_count")
-      .eq("user_id", userId)
+      .eq("id", userId)
       .single();
 
     if (existingUser) {
@@ -45,7 +44,7 @@ export async function updateUserVisitDirect(userData: userData) {
           visits_count: existingUser.visits_count + 1,
           updated_at: new Date().toISOString(),
         })
-        .eq("user_id", userId)
+        .eq("id", userId)
         .select();
 
       if (error) throw error;
@@ -55,7 +54,7 @@ export async function updateUserVisitDirect(userData: userData) {
       const { data, error } = await supabase
         .from("users_activity")
         .insert({
-          user_id: userId,
+          id: userId,
           user_name: userName,
           user_full_name: userFullName,
           last_visit_at: new Date().toISOString(),
@@ -81,7 +80,7 @@ export async function getUserActivity(userId: string) {
     const { data, error } = await supabase
       .from("users_activity")
       .select("*")
-      .eq("user_id", userId)
+      .eq("id", userId)
       .single();
 
     if (error && error.code !== "PGRST116") throw error; // PGRST116 - no rows returned
