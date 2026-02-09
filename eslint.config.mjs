@@ -17,7 +17,6 @@ const eslintConfig = [
       // "no-console": "warn",
       // "@typescript-eslint/explicit-function-return-type": "off",
       "react-hooks/exhaustive-deps": "off",
-      allowShortCircuit: "true",
     },
   },
 
