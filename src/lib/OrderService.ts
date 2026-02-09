@@ -12,7 +12,7 @@ export interface OrderResponse {
 }
 
 export class OrderService {
-  private static readonly API_URL = "https://mybot-pmod.onrender.com/sendHello";
+  private static readonly ORDER_WEBHOOK_PATH = "/api/order";
 
   static async createOrder({
     product,
@@ -26,20 +26,27 @@ export class OrderService {
     const reqBody = this.buildRequestBody(product, user);
 
     try {
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(this.ORDER_WEBHOOK_PATH, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(reqBody),
       });
 
+      const data = (await response.json()) as OrderResponse;
+
       if (!response.ok) {
-        throw new Error(`Ошибка HTTP: ${response.status}`);
+        return {
+          success: false,
+          message: data.message ?? "Произошла ошибка при оформлении заказа",
+        };
       }
 
-      return { success: true, message: "Заказ успешно оформлен!" };
+      return {
+        success: data.success ?? true,
+        message: data.message,
+      };
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
       return {
