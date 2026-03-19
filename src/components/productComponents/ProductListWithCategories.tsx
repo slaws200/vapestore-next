@@ -168,6 +168,13 @@ export default function ProductListWithCategories({
   if (!products.length) {
     return (
       <div className="col-span-full flex justify-center items-center py-12">
+        <CategoryTabs
+          onCategorySelect={handleCategorySelect}
+          activeCategory={activeCategory}
+          preloadedCategories={preloadedCategories.filter(
+            (item: Category) => item.active
+          )}
+        />
         <p className="text-gray-500 text-lg">
           Нет товаров в выбранной категории
         </p>
@@ -184,7 +191,9 @@ export default function ProductListWithCategories({
       <CategoryTabs
         onCategorySelect={handleCategorySelect}
         activeCategory={activeCategory}
-        preloadedCategories={preloadedCategories}
+        preloadedCategories={preloadedCategories.filter(
+          (item: Category) => item.active
+        )}
       />
       <div className="grid grid-cols-3 gap-2">
         {products.map((product: Product) => (

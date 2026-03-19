@@ -10,6 +10,7 @@ import Select from "../../components/ui/Select";
 import { useTelegram } from "../../hooks/useTelegram";
 import { Category } from "../../types/category";
 import { adminsIds, categoryNamesRu } from "../../utils/constants";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const { userData } = useTelegram();
@@ -49,6 +50,19 @@ export default function ProfilePage() {
           </span>
         </div>
       </div>
+
+      {/* Добавление новых категорий */}
+      {adminsIds.includes(userData.id) && (
+        <div className="text-gray-950 flex flex-col items-center justify-center relative px-4">
+          <div className="flex flex-col items-center text-lg w-full rounded-xl bg-white">
+            <Link href="/profile/categories" className="w-full">
+              <button className="px-4 py-2 text-sm w-full font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                {"Редактировать категории"}
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Добавление новых товаров */}
       {adminsIds.includes(userData.id) && (
