@@ -5,12 +5,25 @@ export async function fetchAllProducts(
   from: number,
   to: number
 ): Promise<Product[]> {
+  // В выдачу должны попадать только товары из активных категорий
+  const { data: activeCategories, error: categoriesError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("active", true);
+
+  if (categoriesError) throw categoriesError;
+
+  const activeCategoryIds = (activeCategories ?? []).map((c) => c.id);
+  if (activeCategoryIds.length === 0) return [];
+
   const { data, error } = await supabase
     .from("products")
     .select("*")
+    .in("category_id", activeCategoryIds)
     .order("available", { ascending: false }) // доступные первыми
     .order("id_bigserial", { ascending: true }) // потом по id
     .range(from, to);
+
   if (error) throw error;
   return data || [];
 }

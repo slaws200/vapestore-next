@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import ProductListWithCategories from "@/components/productComponents/ProductListWithCategories";
 import { fetchAllCategories } from "@/lib/categories";
 import { fetchAllProducts } from "@/lib/products";
